@@ -453,7 +453,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -505,6 +505,7 @@ GameObject:
   - component: {fileID: 1091134070}
   - component: {fileID: 1091134069}
   - component: {fileID: 1091134071}
+  - component: {fileID: 1091134072}
   m_Layer: 0
   m_Name: board_right
   m_TagString: board
@@ -595,6 +596,32 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!61 &1091134072
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091134068}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.3, y: 1.6}
+    newSize: {x: 0.3, y: 1.6}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.3, y: 1.6}
+  m_EdgeRadius: 0
 --- !u!1 &1562729922
 GameObject:
   m_ObjectHideFlags: 0
@@ -607,6 +634,7 @@ GameObject:
   - component: {fileID: 1562729923}
   - component: {fileID: 1562729926}
   - component: {fileID: 1562729925}
+  - component: {fileID: 1562729927}
   m_Layer: 0
   m_Name: board_left
   m_TagString: board
@@ -686,7 +714,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -723,3 +751,17 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1562729927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1562729922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7aedcc3512c98457fb75b09872c435c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  board: {fileID: 1562729922}
+  rbody: {fileID: 0}

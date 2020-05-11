@@ -24,4 +24,14 @@ public class Ball : MonoBehaviour
     {
         
     }
+
+    private void OnCollisionEnter2D(Collision2D c)
+	{
+        Debug.Log("Ball");
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+	{
+        Debug.Log("BallT");
+    }
 }

@@ -2,36 +2,51 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ball : MonoBehaviour
+namespace Pong
 {
-    public GameObject ball;
-    public Rigidbody2D rbody;
-
-    // Start is called before the first frame update
-    void Start()
+    public class Ball : MonoBehaviour
     {
-        UnityEngine.Assertions.Assert.IsNotNull(ball);
-        rbody = ball.GetComponent<Rigidbody2D>();
-        UnityEngine.Assertions.Assert.IsNotNull(rbody);
-		// 回転をロック
-        rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
-		// 左進行
-        rbody.velocity = new Vector2(-2.0f, 0.0f);
-    }
+        public GameObject ball;
+        public Rigidbody2D rbody;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+        // Start is called before the first frame update
+        void Start()
+        {
+            UnityEngine.Assertions.Assert.IsNotNull(ball);
+            rbody = ball.GetComponent<Rigidbody2D>();
+            UnityEngine.Assertions.Assert.IsNotNull(rbody);
+            // 回転をロック
+            //rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
+            // 左進行
+            rbody.velocity = new Vector2(-2.0f, 0.0f);
+        }
 
-    private void OnCollisionEnter2D(Collision2D c)
-	{
-        Debug.Log("Ball");
-    }
+        // Update is called once per frame
+        void Update()
+        {
 
-    private void OnTriggerEnter2D(Collider2D collision)
-	{
-        Debug.Log("BallT");
+        }
+
+        public void SetVelocity(Vector2 velocity)
+        {
+            rbody.velocity = new Vector2(velocity.x, velocity.y);
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            Debug.Log("Ball");
+            if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.Board))
+            {
+                Debug.Log("Ball(Board)");
+                Vector2 v = rbody.velocity;
+                v.x = v.x * -1;
+                v.y = v.y * -1;
+                rbody.velocity = v;
+            }
+            else if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.Wall))
+            {
+                Debug.Log("Ball(Wall)");
+            }
+        }
     }
 }

@@ -6,6 +6,9 @@ TagManager:
   tags:
   - board
   - ball
+  - wall
+  - goal_l
+  - goal_r
   layers:
   - Default
   - TransparentFX

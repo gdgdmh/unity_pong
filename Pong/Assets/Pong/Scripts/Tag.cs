@@ -15,6 +15,8 @@ namespace Pong
             Ball,   // 玉
             Board,  // 板
             Wall,   // 4方の壁
+            GoalL,  // 左側ゴール
+            GoalR,  // 右側ゴール
         };
         /// <summary>
         /// タグ定義から文字列に変換
@@ -28,7 +30,9 @@ namespace Pong
             {
                 "ball",
                 "board",
-                "wall"
+                "wall",
+                "goal_l",
+                "goal_r"
             };
             return names[(int)tag];
         }

@@ -37,7 +37,7 @@ namespace Pong
         public void Shot()
         {
             // 左進行
-            rbody.velocity = new Vector2(-speed, 0.0f);
+            rbody.velocity = new Vector2(-speed, speed);
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
@@ -52,6 +52,14 @@ namespace Pong
             else if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.Wall))
             {
                 Debug.Log("Ball(Wall)");
+            }
+            else if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.GoalL))
+            {
+                Debug.Log("Ball(GoalL)");
+            }
+            else if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.GoalR))
+            {
+                Debug.Log("Ball(GoalR)");
             }
         }
 

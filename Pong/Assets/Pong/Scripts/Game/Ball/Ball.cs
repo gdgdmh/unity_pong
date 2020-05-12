@@ -22,19 +22,22 @@ namespace Pong
             rbody = ball.GetComponent<Rigidbody2D>();
             UnityEngine.Assertions.Assert.IsNotNull(rbody);
             speed = StartSpeed;
-            // 左進行
-            rbody.velocity = new Vector2(-speed, 0.0f);
+
+            Shot();
         }
 
         // Update is called once per frame
         void Update()
         {
-
         }
 
-        public void SetVelocity(Vector2 velocity)
+        /// <summary>
+        /// ボールの打ち出し
+        /// </summary>
+        public void Shot()
         {
-            rbody.velocity = new Vector2(velocity.x, velocity.y);
+            // 左進行
+            rbody.velocity = new Vector2(-speed, 0.0f);
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
@@ -43,29 +46,44 @@ namespace Pong
             if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.Board))
             {
                 Debug.Log("Ball(Board)");
-                Vector2 v = rbody.velocity;
-                speed += AddSpeed;
-                if (speed >= MaxSpeed)
-                {
-                    speed = MaxSpeed;
-                }
-                if (v.x > 0)
-                {
-                    v.x = -speed;
-                }
-                else
-                {
-                    v.x = speed;
-                }
-                //v.x = speed * -1;
-                v.y = v.y * -1;
-                rbody.velocity = v;
-                Debug.Log(rbody.velocity.x);
+                SpeedUp();
+                Bound();
             }
             else if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.Wall))
             {
                 Debug.Log("Ball(Wall)");
             }
+        }
+
+        /// <summary>
+        /// スピードアップ処理
+        /// </summary>
+        private void SpeedUp()
+        {
+            speed += AddSpeed;
+            if (speed > MaxSpeed)
+            {
+                speed = MaxSpeed;
+            }
+        }
+
+        /// <summary>
+        /// バウンド処理
+        /// </summary>
+        private void Bound()
+        {
+            Vector2 v = rbody.velocity;
+            if (v.x > 0)
+            {
+                v.x = -speed;
+            }
+            else
+            {
+                v.x = speed;
+            }
+            v.y = v.y * -1;
+            rbody.velocity = v;
+            Debug.Log(rbody.velocity.x);
         }
     }
 }

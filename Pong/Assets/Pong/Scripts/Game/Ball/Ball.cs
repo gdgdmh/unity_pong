@@ -13,6 +13,7 @@ namespace Pong
 
         public GameObject ball;
         public Rigidbody2D rbody;
+        private GoalSubject goalSubject = new GoalSubject();
         private float speed;
 
         // Start is called before the first frame update
@@ -40,6 +41,15 @@ namespace Pong
             rbody.velocity = new Vector2(-speed, speed);
         }
 
+        /// <summary>
+        /// ゴール監視の追加
+        /// </summary>
+        /// <param name="o"></param>
+        public void AddGoalObserver(IGoalObservable o)
+        {
+            goalSubject.AddObserver(o);
+        }
+
         private void OnTriggerEnter2D(Collider2D collision)
         {
             Debug.Log("Ball");
@@ -57,10 +67,12 @@ namespace Pong
             else if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.GoalL))
             {
                 Debug.Log("Ball(GoalL)");
+                goalSubject.NotifyObservers(PlayerConstant.Position.Left);
             }
             else if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.GoalR))
             {
                 Debug.Log("Ball(GoalR)");
+                goalSubject.NotifyObservers(PlayerConstant.Position.Right);
             }
         }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Pong
 {
-    public class GameTask : MonoBehaviour
+    public class GameTask : MonoBehaviour, Pong.IGoalObservable
     {
         private enum Scene : int
         {
@@ -15,25 +15,45 @@ namespace Pong
             Ended       // 終了
         };
 
-        Scene scene;
+        public GameObject ball;
+        private Pong.Ball ballScript;
+
+        //Scene scene;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         public GameTask()
         {
-            scene = Scene.Initialize;
+            //scene = Scene.Initialize;
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            scene = Scene.Initialize;
+            UnityEngine.Assertions.Assert.IsNotNull(ball);
+            ballScript = ball.GetComponent<Ball>();
+            UnityEngine.Assertions.Assert.IsNotNull(ballScript);
+            ballScript.AddGoalObserver(this);
+
+            //scene = Scene.Initialize;
         }
 
         // Update is called once per frame
         void Update()
         {
+        }
+
+        public void Goal(PlayerConstant.Position position)
+        {
+            if (position == PlayerConstant.Position.Left)
+            {
+                Debug.Log("GameTask(Goal) Left");
+            }
+            else
+            {
+                Debug.Log("GameTask(Goal) Right");
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D collision)

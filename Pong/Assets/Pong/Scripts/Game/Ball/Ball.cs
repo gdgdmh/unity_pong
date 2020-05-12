@@ -47,11 +47,12 @@ namespace Pong
             {
                 Debug.Log("Ball(Board)");
                 SpeedUp();
-                Bound();
+                BoundBoard();
             }
             else if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.Wall))
             {
                 Debug.Log("Ball(Wall)");
+                BoundWall();
             }
             else if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.GoalL))
             {
@@ -76,9 +77,9 @@ namespace Pong
         }
 
         /// <summary>
-        /// バウンド処理
+        /// ボード用バウンド処理
         /// </summary>
-        private void Bound()
+        private void BoundBoard()
         {
             Vector2 v = rbody.velocity;
             if (v.x > 0)
@@ -89,9 +90,19 @@ namespace Pong
             {
                 v.x = speed;
             }
-            v.y = v.y * -1;
+            //v.y *= -1;
             rbody.velocity = v;
             Debug.Log(rbody.velocity.x);
+        }
+
+        /// <summary>
+        /// 壁用バウンド処理
+        /// </summary>
+        private void BoundWall()
+        {
+            Vector2 v = rbody.velocity;
+            v.y *= -1;
+            rbody.velocity = v;
         }
     }
 }

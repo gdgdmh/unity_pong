@@ -11,5 +11,7 @@ namespace Pong
             Left,   // 左側プレイヤー
             Right   // 右側プレイヤー
         };
+
+        public static readonly int Count = 2; // プレイヤーの人数
     }
 }

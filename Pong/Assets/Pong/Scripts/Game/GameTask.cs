@@ -15,8 +15,12 @@ namespace Pong
             Ended       // 終了
         };
 
+        // ballオブジェクト
         public GameObject ball;
+        // ballスクリプト
         private Pong.Ball ballScript;
+        // プレイヤーのスコア
+        private Pong.PlayerScore score = new PlayerScore();
 
         //Scene scene;
 

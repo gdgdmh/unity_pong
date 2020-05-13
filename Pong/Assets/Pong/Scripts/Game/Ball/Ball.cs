@@ -6,10 +6,9 @@ namespace Pong
 {
     public class Ball : MonoBehaviour
     {
-        public static readonly float StartSpeed = 2.0f;
-        public static readonly float MaxSpeed = 24.0f;
-        public static readonly float AddSpeed = 2.0f;
-
+        public static readonly float StartSpeed = 2.0f; // 初期スピード
+        public static readonly float MaxSpeed = 24.0f;  // 最大スピード
+        public static readonly float AddSpeed = 2.0f;   // 1回で上がるスピード
 
         public GameObject ball;
         public Rigidbody2D rbody;
@@ -102,9 +101,7 @@ namespace Pong
             {
                 v.x = speed;
             }
-            //v.y *= -1;
             rbody.velocity = v;
-            Debug.Log(rbody.velocity.x);
         }
 
         /// <summary>

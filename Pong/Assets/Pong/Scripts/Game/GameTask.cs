@@ -51,7 +51,7 @@ namespace Pong
         public void Goal(PlayerConstant.Position position)
         {
             // ball delete
-            RemoveGoalObserver(ballScript);
+            //RemoveGoalObserver(ballScript);
             Destroy(ball);
             ballScript = null;
             ball = null;
@@ -72,11 +72,12 @@ namespace Pong
         private void CreateBall()
         {
             Pong.BallFactory factory = new Pong.BallFactory();
-            ball = factory.Create();
-            Instantiate(ball, new Vector3(0, 0, 0), Quaternion.identity);
+            ball = Instantiate(factory.Create(), new Vector3(0, 0, 0), Quaternion.identity);
             UnityEngine.Assertions.Assert.IsNotNull(ball);
             ballScript = ball.GetComponent<Ball>();
             UnityEngine.Assertions.Assert.IsNotNull(ballScript);
+            //ball.GetComponent<Ball>().AddGoalObserver(this);
+            //ballScript.SetGameTaskScript(this);
         }
 
         private void AddGoalObserver(Pong.Ball balScript)

@@ -22,8 +22,14 @@ namespace Pong
         public GameObject ball;
         public Rigidbody2D rbody;
         [SerializeField] private GoalSubject goalSubject = new GoalSubject();
+        [SerializeField] private GameTask gameTask = null;
         private Mhl.IRandIntGeneratable rand = new Mhl.RandIntSystem();
         private float speed;
+
+        public Ball()
+        {
+
+        }
 
         // Start is called before the first frame update
         void Start()
@@ -50,6 +56,11 @@ namespace Pong
         {
             Direction rs = GetRandomDirection();
             rbody.velocity = GetDirectionToVelocity(rs);
+        }
+
+        public void SetGameTaskScript(GameTask task)
+        {
+            gameTask = task;
         }
 
         private Direction GetRandomDirection()
@@ -120,11 +131,13 @@ namespace Pong
             else if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.GoalL))
             {
                 Debug.Log("Ball(GoalL)");
+                //gameTask.Goal(PlayerConstant.Position.Left);
                 goalSubject.NotifyObservers(PlayerConstant.Position.Left);
             }
             else if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.GoalR))
             {
                 Debug.Log("Ball(GoalR)");
+                //gameTask.Goal(PlayerConstant.Position.Right);
                 goalSubject.NotifyObservers(PlayerConstant.Position.Right);
             }
         }

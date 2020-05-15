@@ -6,6 +6,15 @@ namespace Pong
 {
     public class Ball : MonoBehaviour
     {
+        private enum Direction : int
+        {
+            LeftUp,     // 左上
+            LeftDown,   // 左下
+            RightUp,    // 右上
+            RightDown,  // 右下
+            Max
+        };
+
         public static readonly float StartSpeed = 2.0f; // 初期スピード
         public static readonly float MaxSpeed = 24.0f;  // 最大スピード
         public static readonly float AddSpeed = 2.0f;   // 1回で上がるスピード
@@ -13,6 +22,7 @@ namespace Pong
         public GameObject ball;
         public Rigidbody2D rbody;
         private GoalSubject goalSubject = new GoalSubject();
+        private Mhl.IRandIntGeneratable rand = new Mhl.RandIntSystem();
         private float speed;
 
         // Start is called before the first frame update
@@ -36,8 +46,37 @@ namespace Pong
         /// </summary>
         public void Shot()
         {
-            // 左進行
-            rbody.velocity = new Vector2(-speed, speed);
+            Direction rs = GetRandomDirection();
+            rbody.velocity = GetDirectionToVelocity(rs);
+        }
+
+        private Direction GetRandomDirection()
+        {
+            return (Direction)rand.GetRange(0, (int)Direction.Max - 1);
+        }
+
+        /// <summary>
+        /// 方向から移動ベクトルを取得する
+        /// </summary>
+        /// <param name="rs">方向</param>
+        /// <returns>移動ベクトル</returns>
+        private Vector2 GetDirectionToVelocity(Direction rs)
+        {
+            switch (rs)
+            {
+                case Direction.LeftUp:
+                    return Mhl.Direction.GetVelocity2D(125, speed);
+                case Direction.LeftDown:
+                    return Mhl.Direction.GetVelocity2D(225, speed);
+                case Direction.RightUp:
+                    return Mhl.Direction.GetVelocity2D(45, speed);
+                case Direction.RightDown:
+                    return Mhl.Direction.GetVelocity2D(325, speed);
+                default:
+                    // 方向がおかしい または case未定義
+                    UnityEngine.Assertions.Assert.IsTrue(false);
+                    return new Vector2(0, 0);
+            }
         }
 
         /// <summary>

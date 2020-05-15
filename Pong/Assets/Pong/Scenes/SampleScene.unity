@@ -210,7 +210,7 @@ GameObject:
   - component: {fileID: 250609223}
   - component: {fileID: 250609222}
   m_Layer: 0
-  m_Name: GameTask
+  m_Name: game_task
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

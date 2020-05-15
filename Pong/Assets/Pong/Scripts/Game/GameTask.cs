@@ -60,6 +60,10 @@ namespace Pong
             }
         }
 
+        private void ShotRandom()
+        {
+        }
+
         private void OnTriggerEnter2D(Collider2D collision)
         {
         }

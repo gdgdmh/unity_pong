@@ -21,18 +21,20 @@ namespace Pong
 
         public GameObject ball;
         public Rigidbody2D rbody;
-        private GoalSubject goalSubject = new GoalSubject();
+        [SerializeField] private GoalSubject goalSubject = new GoalSubject();
         private Mhl.IRandIntGeneratable rand = new Mhl.RandIntSystem();
         private float speed;
 
         // Start is called before the first frame update
         void Start()
         {
+            // 関連付け
             UnityEngine.Assertions.Assert.IsNotNull(ball);
             rbody = ball.GetComponent<Rigidbody2D>();
             UnityEngine.Assertions.Assert.IsNotNull(rbody);
+            // 初期スピード設定
             speed = StartSpeed;
-
+            // 発射
             Shot();
         }
 
@@ -82,12 +84,25 @@ namespace Pong
         /// <summary>
         /// ゴール監視の追加
         /// </summary>
-        /// <param name="o"></param>
+        /// <param name="o">追加するオブジェクト</param>
         public void AddGoalObserver(IGoalObservable o)
         {
             goalSubject.AddObserver(o);
         }
 
+        /// <summary>
+        /// ゴール監視の削除
+        /// </summary>
+        /// <param name="o">削除するオブジェクト</param>
+        public void RemoveGoalObserver(IGoalObservable o)
+        {
+            goalSubject.RemoveObserver(o);
+        }
+
+        /// <summary>
+        /// 当たり判定
+        /// </summary>
+        /// <param name="collision">当たったオブジェクト</param>
         private void OnTriggerEnter2D(Collider2D collision)
         {
             Debug.Log("Ball");

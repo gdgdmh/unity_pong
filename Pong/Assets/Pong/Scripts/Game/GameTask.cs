@@ -35,12 +35,8 @@ namespace Pong
         // Start is called before the first frame update
         void Start()
         {
-            UnityEngine.Assertions.Assert.IsNotNull(ball);
-            ballScript = ball.GetComponent<Ball>();
-            UnityEngine.Assertions.Assert.IsNotNull(ballScript);
-            ballScript.AddGoalObserver(this);
-
-            //scene = Scene.Initialize;
+            CreateBall();
+            AddGoalObserver(ballScript);
         }
 
         // Update is called once per frame
@@ -48,8 +44,18 @@ namespace Pong
         {
         }
 
+        /// <summary>
+        /// ゴールイベント
+        /// </summary>
+        /// <param name="position">ゴールした方のプレイヤー</param>
         public void Goal(PlayerConstant.Position position)
         {
+            // ball delete
+            RemoveGoalObserver(ballScript);
+            Destroy(ball);
+            ballScript = null;
+            ball = null;
+
             if (position == PlayerConstant.Position.Left)
             {
                 Debug.Log("GameTask(Goal) Left");
@@ -58,10 +64,29 @@ namespace Pong
             {
                 Debug.Log("GameTask(Goal) Right");
             }
+
+            CreateBall();
+            AddGoalObserver(ballScript);
         }
 
-        private void ShotRandom()
+        private void CreateBall()
         {
+            Pong.BallFactory factory = new Pong.BallFactory();
+            ball = factory.Create();
+            Instantiate(ball, new Vector3(0, 0, 0), Quaternion.identity);
+            UnityEngine.Assertions.Assert.IsNotNull(ball);
+            ballScript = ball.GetComponent<Ball>();
+            UnityEngine.Assertions.Assert.IsNotNull(ballScript);
+        }
+
+        private void AddGoalObserver(Pong.Ball balScript)
+        {
+            ballScript.AddGoalObserver(this);
+        }
+
+        private void RemoveGoalObserver(Pong.Ball ballScript)
+        {
+            ballScript.RemoveGoalObserver(this);
         }
 
         private void OnTriggerEnter2D(Collider2D collision)

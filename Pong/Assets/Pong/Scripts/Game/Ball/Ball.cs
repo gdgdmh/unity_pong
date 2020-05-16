@@ -130,15 +130,13 @@ namespace Pong
             }
             else if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.GoalL))
             {
-                Debug.Log("Ball(GoalL)");
-                //gameTask.Goal(PlayerConstant.Position.Left);
-                goalSubject.NotifyObservers(PlayerConstant.Position.Left);
+                Debug.Log("Ball(GoalR)");
+                goalSubject.NotifyObservers(PlayerConstant.Position.Right);
             }
             else if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.GoalR))
             {
-                Debug.Log("Ball(GoalR)");
-                //gameTask.Goal(PlayerConstant.Position.Right);
-                goalSubject.NotifyObservers(PlayerConstant.Position.Right);
+                Debug.Log("Ball(GoalL)");
+                goalSubject.NotifyObservers(PlayerConstant.Position.Left);
             }
         }
 

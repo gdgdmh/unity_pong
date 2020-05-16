@@ -124,6 +124,11 @@ namespace Pong
             {
                 Debug.Log("GameTask(Goal) Right");
             }
+            // スコアの加算
+            score.Add(position);
+
+            Debug.Log("score left  " + score.Get(PlayerConstant.Position.Left));
+            Debug.Log("score right " + score.Get(PlayerConstant.Position.Right));
 
             scene = Scene.GoalSeStart;
         }

@@ -102,12 +102,12 @@ namespace Pong
         }
 
         /// <summary>
-        /// ゴール監視の削除
+        /// ゴール監視削除リクエスト
         /// </summary>
         /// <param name="o">削除するオブジェクト</param>
-        public void RemoveGoalObserver(IGoalObservable o)
+        public void RequestRemoveObserver(IGoalObservable o)
         {
-            goalSubject.RemoveObserver(o);
+            goalSubject.RequestRemoveObserver(o);
         }
 
         /// <summary>

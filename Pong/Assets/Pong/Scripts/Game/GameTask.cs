@@ -70,8 +70,8 @@ namespace Pong
         public void Goal(PlayerConstant.Position position)
         {
             // ball delete
-            //RemoveGoalObserver(ballScript);
-            Destroy(ball);
+            RequestRemoveObserver(ballScript);
+            Destroy(ball.gameObject);
             ballScript = null;
             ball = null;
 
@@ -102,9 +102,10 @@ namespace Pong
             ballScript.AddGoalObserver(this);
         }
 
-        private void RemoveGoalObserver(Pong.Ball ballScript)
+        private void RequestRemoveObserver(Pong.Ball ballScript)
         {
-            ballScript.RemoveGoalObserver(this);
+            ballScript.RequestRemoveObserver(this);
+            //ballScript.RemoveGoalObserver(this);
         }
 
         private void OnTriggerEnter2D(Collider2D collision)

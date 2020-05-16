@@ -11,37 +11,56 @@ namespace Pong
             Initialize, // 初期化
             ShotBall,   // ボール打ち出し
             Playing,    // プレイ中
-            Scored,     // 加点処理
+            Scoring,    // 加点処理
             Ended       // 終了
         };
 
         // ballオブジェクト
-        public GameObject ball;
+        private GameObject ball;
         // ballスクリプト
         private Pong.Ball ballScript;
         // プレイヤーのスコア
         private Pong.PlayerScore score = new PlayerScore();
-
-        //Scene scene;
+        // シーン管理変数
+        Scene scene;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         public GameTask()
         {
-            //scene = Scene.Initialize;
+            scene = Scene.Initialize;
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            CreateBall();
-            AddGoalObserver(ballScript);
+            scene = Scene.Initialize;
         }
 
         // Update is called once per frame
         void Update()
         {
+            switch (scene)
+            {
+                case Scene.Initialize:
+                    scene = Scene.ShotBall;
+                    break;
+                case Scene.ShotBall:
+                    CreateBall();
+                    AddGoalObserver(ballScript);
+                    scene = Scene.Playing;
+                    break;
+                case Scene.Playing:
+                    break;
+                case Scene.Scoring:
+                    scene = Scene.ShotBall;
+                    break;
+                case Scene.Ended:
+                    break;
+
+            }
+
         }
 
         /// <summary>
@@ -64,9 +83,7 @@ namespace Pong
             {
                 Debug.Log("GameTask(Goal) Right");
             }
-
-            CreateBall();
-            AddGoalObserver(ballScript);
+            scene = Scene.Scoring;
         }
 
         private void CreateBall()

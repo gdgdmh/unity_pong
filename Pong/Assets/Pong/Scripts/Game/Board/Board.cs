@@ -8,6 +8,8 @@ namespace Pong
     {
         public GameObject board;
         public Rigidbody2D rbody;
+        public AudioClip audioClip;
+        private AudioSource audioSource;
 
         // Start is called before the first frame update
         void Start()
@@ -15,6 +17,10 @@ namespace Pong
             UnityEngine.Assertions.Assert.IsNotNull(board);
             rbody = board.GetComponent<Rigidbody2D>();
             UnityEngine.Assertions.Assert.IsNotNull(rbody);
+
+            UnityEngine.Assertions.Assert.IsNotNull(audioClip);
+            audioSource = GetComponent<AudioSource>();
+            UnityEngine.Assertions.Assert.IsNotNull(audioSource);
 
         }
 
@@ -33,6 +39,10 @@ namespace Pong
             Debug.Log("Board");
             if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.Ball))
             {
+                UnityEngine.Assertions.Assert.IsNotNull(audioClip);
+                UnityEngine.Assertions.Assert.IsNotNull(audioSource);
+
+                audioSource.PlayOneShot(audioClip);
                 Debug.Log("Board(Ball)");
             }
         }

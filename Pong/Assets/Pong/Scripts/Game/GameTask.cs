@@ -22,9 +22,10 @@ namespace Pong
         // ballスクリプト
         private Pong.Ball ballScript;
         // プレイヤーのスコア
-        private Pong.PlayerScore score = new PlayerScore();
+        private Pong.PlayerScore score = new Pong.PlayerScore();
+        private Pong.ScoreSubject scoreSubject = new Pong.ScoreSubject();
         // シーン管理変数
-        Scene scene;
+        private Scene scene;
 
         /// <summary>
         /// コンストラクタ
@@ -126,11 +127,21 @@ namespace Pong
             }
             // スコアの加算
             score.Add(position);
-
             Debug.Log("score left  " + score.Get(PlayerConstant.Position.Left));
             Debug.Log("score right " + score.Get(PlayerConstant.Position.Right));
+            // スコア更新通知
+            scoreSubject.NotifyObservers(score);
 
             scene = Scene.GoalSeStart;
+        }
+
+        /// <summary>
+        /// スコア通知を追加
+        /// </summary>
+        /// <param name="o">スコア通知オブザーバー</param>
+        public void AddScoreObserver(Pong.IScoreObserverable o)
+        {
+            scoreSubject.Add(o);
         }
 
         /// <summary>

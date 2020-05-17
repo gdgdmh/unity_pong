@@ -44,6 +44,19 @@ namespace Mhl
         }
 
         /// <summary>
+        /// 削除リクエストを実行
+        /// </summary>
+        public void ExecuteRequestRemove()
+        {
+            // 削除リクエストがあったオブザーバーを削除
+            foreach (var requestObserver in requestRemoveObservers)
+            {
+                Remove(requestObserver);
+            }
+            requestRemoveObservers.Clear();
+        }
+
+        /// <summary>
         /// オブザーバーを全て削除(削除リクエスト含む)
         /// </summary>
         public void Clear()

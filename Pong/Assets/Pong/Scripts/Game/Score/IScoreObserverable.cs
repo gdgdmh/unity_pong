@@ -2,17 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IScoreObserverable : MonoBehaviour
+namespace Pong
 {
-    // Start is called before the first frame update
-    void Start()
+    /// <summary>
+    /// スコア通知インターフェース
+    /// </summary>
+    public interface IScoreObserverable
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        void Update(Pong.PlayerScore score);
     }
 }

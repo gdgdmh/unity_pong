@@ -18,11 +18,7 @@ namespace Pong {
             {
                 observer.Goal(position);
             }
-            // 削除リクエストがあったオブザーバーを削除
-            foreach (var requestObserver in requestRemoveObservers)
-            {
-                Remove(requestObserver);
-            }
+            ExecuteRequestRemove();
         }
     }
 }

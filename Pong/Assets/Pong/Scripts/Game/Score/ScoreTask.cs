@@ -2,19 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScoreTask : MonoBehaviour
+namespace Pong
 {
-    public ScoreTask()
+    public class ScoreTask : MonoBehaviour
     {
-    }
+        public GameObject textGameObject = null;
+        private UnityEngine.UI.Text text = null;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
+        public ScoreTask()
+        {
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
+        // Start is called before the first frame update
+        void Start()
+        {
+            // textの関連付け
+            UnityEngine.Assertions.Assert.IsNotNull(textGameObject);
+            text = textGameObject.GetComponent<UnityEngine.UI.Text>();
+            UnityEngine.Assertions.Assert.IsNotNull(text);
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+        }
     }
 }

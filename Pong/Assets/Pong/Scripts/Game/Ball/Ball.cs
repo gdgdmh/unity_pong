@@ -98,7 +98,7 @@ namespace Pong
         /// <param name="o">追加するオブジェクト</param>
         public void AddGoalObserver(IGoalObservable o)
         {
-            goalSubject.AddObserver(o);
+            goalSubject.Add(o);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Pong
         /// <param name="o">削除するオブジェクト</param>
         public void RequestRemoveObserver(IGoalObservable o)
         {
-            goalSubject.RequestRemoveObserver(o);
+            goalSubject.RequestRemove(o);
         }
 
         /// <summary>

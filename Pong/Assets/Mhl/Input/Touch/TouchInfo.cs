@@ -106,16 +106,23 @@ namespace Mhl
 
         public static string ToStatusString(TouchInfo.Status touchStatus)
         {
-            return touchStatus switch
+            switch (touchStatus)
             {
-                Status.None => "None",
-                Status.Began => "Began",
-                Status.Moved => "Moved",
-                Status.Stationaly => "Stationaly",
-                Status.Ended => "Ended",
-                Status.Canceled => "Canceled",
-                _ => "Unknown",
-            };
+                case Status.None:
+                    return "None";
+                case Status.Began:
+                    return "Began";
+                case Status.Moved:
+                    return "Moved";
+                case Status.Stationaly:
+                    return "Stationaly";
+                case Status.Ended:
+                    return "Ednded";
+                case Status.Canceled:
+                    return "Canceled";
+                default:
+                    return "Unknown";
+            }
         }
 
         public void Print()

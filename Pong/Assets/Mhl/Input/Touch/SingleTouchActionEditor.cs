@@ -320,7 +320,6 @@ namespace Mhl
             TouchInfo.Status status = touchInfo[CurrentFrame].TouchStatus;
             switch (status)
             {
-                case TouchInfo.Status.Began:
                 case TouchInfo.Status.Moved:
                 case TouchInfo.Status.Stationary:
                     return true;

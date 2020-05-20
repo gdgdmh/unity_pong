@@ -47,11 +47,17 @@ namespace Mhl
             get { return status; }
         }
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public TouchInfo()
         {
             Clear();
         }
 
+        /// <summary>
+        /// データをクリア
+        /// </summary>
         public void Clear()
         {
             touchId = InvalidTouchId;
@@ -59,6 +65,10 @@ namespace Mhl
             status = Status.None;
         }
 
+        /// <summary>
+        /// コピー
+        /// </summary>
+        /// <param name="source">コピー元</param>
         public void Copy(TouchInfo source)
         {
             touchId = source.touchId;
@@ -66,6 +76,11 @@ namespace Mhl
             status = source.status;
         }
 
+        /// <summary>
+        /// 位置が一致しているかチェック
+        /// </summary>
+        /// <param name="source">比較元</param>
+        /// <returns>trueなら位置が一致している</returns>
         public bool EqualPosition(TouchInfo source)
         {
             if ((position.x == source.position.x)
@@ -77,6 +92,11 @@ namespace Mhl
             return false;
         }
 
+        /// <summary>
+        /// データが一致しているか
+        /// </summary>
+        /// <param name="source">比較元</param>
+        /// <returns>trueならデータが一致している</returns>
         public bool Equals(TouchInfo source)
         {
             if ((touchId == source.touchId)
@@ -90,11 +110,20 @@ namespace Mhl
             return false;
         }
 
+        /// <summary>
+        /// タッチIDが無効か
+        /// </summary>
+        /// <returns>trueならタッチIDが無効なデータである</returns>
         public bool IsTouchIdInvalid()
         {
             return IsTouchIdInvalid(touchId);
         }
 
+        /// <summary>
+        /// 指定されたタッチIDが無効か
+        /// </summary>
+        /// <param name="id">チェックするタッチID</param>
+        /// <returns>trueならタッチIDが無効</returns>
         public static bool IsTouchIdInvalid(int id)
         {
             if (id == InvalidTouchId)
@@ -104,6 +133,11 @@ namespace Mhl
             return false;
         }
 
+        /// <summary>
+        /// ステータスを文字列に変換する
+        /// </summary>
+        /// <param name="touchStatus">タッチ状態</param>
+        /// <returns>タッチ状態の文字列</returns>
         public static string ToStatusString(TouchInfo.Status touchStatus)
         {
             switch (touchStatus)
@@ -125,6 +159,9 @@ namespace Mhl
             }
         }
 
+        /// <summary>
+        /// データを表示
+        /// </summary>
         public void Print()
         {
             Debug.Log(string.Format("id={0} x={1} y={2} z={3} status={4}",

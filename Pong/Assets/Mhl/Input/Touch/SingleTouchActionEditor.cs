@@ -39,104 +39,153 @@ namespace Mhl
             touchInfo[Before1Frame].Copy(touchInfo[CurrentFrame]);
 
             TouchInfo.Status status = touchInfo[CurrentFrame].TouchStatus;
-            TouchInfo.Status beforeStatus = touchInfo[Before1Frame].TouchStatus;
             switch (status)
             {
                 case TouchInfo.Status.None:
-                    // 押したりしていない状態で押されたらBeganへ移行
-                    if (Input.GetMouseButtonDown(0) == true)
-                    {
-                        touchInfo[CurrentFrame].TouchId = 0;
-                        touchInfo[CurrentFrame].Position = Input.mousePosition;
-                        touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Began;
-                    }
-                    else
-                    {
-                        // デフォルト
-                        touchInfo[CurrentFrame].Clear();
-                    }
+                    UpdateNone();
                     break;
                 case TouchInfo.Status.Began:
-                    // 位置を設定
-                    touchInfo[CurrentFrame].Position = Input.mousePosition;
-                    if (Input.GetMouseButton(0) == true)
-                    {
-                        if (touchInfo[CurrentFrame].EqualPosition(touchInfo[Before1Frame]))
-                        {
-                            touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Stationary;
-                        }
-                        else
-                        {
-                            touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Moved;
-                        }
-                    }
-                    else
-                    {
-                        // 持ち上げられたのでEndedへ
-                        touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Ended;
-                    }
+                    UpdateBegan();
                     break;
                 case TouchInfo.Status.Moved:
-                    touchInfo[CurrentFrame].Position = Input.mousePosition;
-                    if (Input.GetMouseButton(0) == false)
-                    {
-                        // 持ち上げられたのでEndedへ
-                        touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Ended;
-                    }
-                    else
-                    {
-                        // 移動してないならStationary 移動していたらMoved
-                        if (touchInfo[CurrentFrame].EqualPosition(touchInfo[Before1Frame]) == true)
-                        {
-                            touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Stationary;
-                        }
-                        else
-                        {
-                            touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Moved;
-                        }
-                    }
+                    UpdateMoved();
                     break;
                 case TouchInfo.Status.Stationary:
-                    touchInfo[CurrentFrame].Position = Input.mousePosition;
-                    if (Input.GetMouseButton(0) == false)
-                    {
-                        // 持ち上げられたのでEndedへ
-                        touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Ended;
-                    }
-                    else
-                    {
-                        // 移動してないならStationary 移動していたらkMoved
-                        if (touchInfo[CurrentFrame].EqualPosition(touchInfo[Before1Frame]) == true)
-                        {
-                            touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Stationary;
-                        }
-                        else
-                        {
-                            touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Moved;
-                        }
-                    }
+                    UpdateStationary();
                     break;
                 case TouchInfo.Status.Ended:
+                    UpdateEnded();
+                    break;
                 case TouchInfo.Status.Canceled:
-                    // 終わった後に押されたらBeganへ移行
-                    if (Input.GetMouseButton(0) == false)
-                    {
-                        // デフォルト状態に戻す
-                        touchInfo[CurrentFrame].Clear();
-                    }
-                    else
-                    {
-                        // タッチIDは0固定
-                        touchInfo[CurrentFrame].TouchId = 0;
-                        // 位置
-                        touchInfo[CurrentFrame].Position = Input.mousePosition;
-                        touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Began;
-                    }
+                    UpdateCanceled();
                     break;
                 default:
                     break;
             }
+        }
 
+        /// <summary>
+        /// 更新時State.None処理
+        /// </summary>
+        private void UpdateNone()
+        {
+            // 押したりしていない状態で押されたらBeganへ移行
+            if (Input.GetMouseButtonDown(0) == true)
+            {
+                touchInfo[CurrentFrame].TouchId = 0;
+                touchInfo[CurrentFrame].Position = Input.mousePosition;
+                touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Began;
+            }
+            else
+            {
+                // デフォルト
+                touchInfo[CurrentFrame].Clear();
+            }
+        }
+
+        /// <summary>
+        /// 更新時State.Began処理
+        /// </summary>
+        private void UpdateBegan()
+        {
+            // 位置を設定
+            touchInfo[CurrentFrame].Position = Input.mousePosition;
+            if (Input.GetMouseButton(0) == true)
+            {
+                if (touchInfo[CurrentFrame].EqualPosition(touchInfo[Before1Frame]))
+                {
+                    touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Stationary;
+                }
+                else
+                {
+                    touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Moved;
+                }
+            }
+            else
+            {
+                // 持ち上げられたのでEndedへ
+                touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Ended;
+            }
+        }
+
+        /// <summary>
+        /// 更新時State.Moved処理
+        /// </summary>
+        private void UpdateMoved()
+        {
+            touchInfo[CurrentFrame].Position = Input.mousePosition;
+            if (Input.GetMouseButton(0) == false)
+            {
+                // 持ち上げられたのでEndedへ
+                touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Ended;
+            }
+            else
+            {
+                // 移動してないならStationary 移動していたらMoved
+                if (touchInfo[CurrentFrame].EqualPosition(touchInfo[Before1Frame]) == true)
+                {
+                    touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Stationary;
+                }
+                else
+                {
+                    touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Moved;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 更新時State.Stationary処理
+        /// </summary>
+        private void UpdateStationary()
+        {
+            touchInfo[CurrentFrame].Position = Input.mousePosition;
+            if (Input.GetMouseButton(0) == false)
+            {
+                // 持ち上げられたのでEndedへ
+                touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Ended;
+            }
+            else
+            {
+                // 移動してないならStationary 移動していたらkMoved
+                if (touchInfo[CurrentFrame].EqualPosition(touchInfo[Before1Frame]) == true)
+                {
+                    touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Stationary;
+                }
+                else
+                {
+                    touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Moved;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 更新時State.Ended処理
+        /// </summary>
+        private void UpdateEnded()
+        {
+            // 終わった後に押されたらBeganへ移行
+            if (Input.GetMouseButton(0) == false)
+            {
+                // デフォルト状態に戻す
+                touchInfo[CurrentFrame].Clear();
+            }
+            else
+            {
+                // タッチIDは0固定
+                touchInfo[CurrentFrame].TouchId = 0;
+                // 位置
+                touchInfo[CurrentFrame].Position = Input.mousePosition;
+                touchInfo[CurrentFrame].TouchStatus = TouchInfo.Status.Began;
+            }
+        }
+
+        /// <summary>
+        /// 更新時State.Canceled処理
+        /// </summary>
+        private void UpdateCanceled()
+        {
+            // Endedと共通
+            UpdateEnded();
         }
 
         /// <summary>

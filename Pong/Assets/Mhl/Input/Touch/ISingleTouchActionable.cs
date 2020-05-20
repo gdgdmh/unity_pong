@@ -13,13 +13,11 @@ namespace Mhl
 
         /// <summary>
         /// 更新処理
-        /// (毎フレーム処理する)
         /// </summary>
         void Update();
 
         /// <summary>
-        /// データのリセットを行う
-        /// シーン移動などで以前のデータが残らないようにする
+        /// データのリセット
         /// </summary>
         void Reset();
 

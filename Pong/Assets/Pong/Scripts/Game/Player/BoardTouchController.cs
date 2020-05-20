@@ -9,11 +9,40 @@ namespace Pong
     /// </summary>
     public class BoardTouchController : IBoardControllable
     {
+        // プレイヤーの位置
+        private Pong.PlayerConstant.Position position;
+        // タッチ情報(外部で更新処理などを行ってもらうので渡してもらう)
+        private Mhl.ISingleTouchActionable touchAction;
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="position">操作対象プレイヤー</param>
+        public BoardTouchController(Pong.PlayerConstant.Position position,
+            Mhl.ISingleTouchActionable touchAction)
+        {
+            this.position = position;
+            this.touchAction = touchAction;
+        }
+
         /// <summary>
         /// 移動
         /// </summary>
         public void MoveBoard()
         {
         }
+
+        private void Update()
+        {
+            if (touchAction.IsDragging())
+            {
+                // タッチ中か
+            }
+            else if (touchAction.IsTouchBegan())
+            {
+                // タッチを開始したときに範囲内ならバーの追従を開始
+            }
+        }
+
     }
 }

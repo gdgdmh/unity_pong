@@ -26,6 +26,8 @@ namespace Pong
         private Pong.ScoreSubject scoreSubject = new Pong.ScoreSubject();
         // シーン管理変数
         private Scene scene;
+        // タッチ
+        private Mhl.ISingleTouchActionable touchAction = new Mhl.SingleTouchActionEditor();
 
         /// <summary>
         /// コンストラクタ
@@ -68,6 +70,8 @@ namespace Pong
                     SceneEnded();
                     break;
             }
+            touchAction.Update();
+            touchAction.PrintDifference();
         }
 
         private void SceneInitialize()
@@ -111,7 +115,7 @@ namespace Pong
         /// <param name="position">ゴールした方のプレイヤー</param>
         public void Goal(PlayerConstant.Position position)
         {
-            // ball delete
+            // Ball削除(オブザーバー解除してからオブジェクトを削除)
             RequestRemoveObserver(ballScript);
             Destroy(ball.gameObject);
             ballScript = null;

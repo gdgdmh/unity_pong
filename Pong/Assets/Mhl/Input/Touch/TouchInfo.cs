@@ -17,7 +17,7 @@ namespace Mhl
             None,       // 何もなし
             Began,      // タッチ開始
             Moved,      // ドラッグ中
-            Stationaly, // ドラッグ中で移動なし
+            Stationary, // ドラッグ中で移動なし
             Ended,      // タッチ終了
             Canceled    // キャンセル
         };
@@ -114,7 +114,7 @@ namespace Mhl
                     return "Began";
                 case Status.Moved:
                     return "Moved";
-                case Status.Stationaly:
+                case Status.Stationary:
                     return "Stationaly";
                 case Status.Ended:
                     return "Ednded";

@@ -21,6 +21,8 @@ namespace Pong
         private GameObject ball;
         // ballスクリプト
         private Pong.Ball ballScript;
+        private float ballRadius = 0.0f;
+        private Rigidbody2D ballRigidbody = null;
         // プレイヤーのスコア
         private Pong.PlayerScore score = new Pong.PlayerScore();
         private Pong.ScoreSubject scoreSubject = new Pong.ScoreSubject();
@@ -28,6 +30,14 @@ namespace Pong
         private Scene scene;
         // タッチ
         private Mhl.ISingleTouchActionable touchAction = new Mhl.SingleTouchActionEditor();
+        // プレイヤー
+        private IBoardControllable[] boardController = new IBoardControllable[Pong.PlayerConstant.Count];
+        // 板
+        [SerializeField] public GameObject boardLeft;
+        [SerializeField] public GameObject boardRight;
+        private float[] boardHeights = new float[Pong.PlayerConstant.Count];
+        private Rigidbody2D boardLeftRigidbody = null;
+        private Rigidbody2D boardRightRigidbody = null;
 
         /// <summary>
         /// コンストラクタ
@@ -41,6 +51,9 @@ namespace Pong
         void Start()
         {
             scene = Scene.Initialize;
+
+            boardController[(int)Pong.PlayerConstant.Position.Left] =
+                new Pong.BoardTouchController(Pong.PlayerConstant.Position.Left, touchAction);
         }
 
         // Update is called once per frame
@@ -77,17 +90,73 @@ namespace Pong
         private void SceneInitialize()
         {
             scene = Scene.ShotBall;
+
+            // boardの情報を取得
+            {
+                Pong.PlayerConstant.Position pos = Pong.PlayerConstant.Position.Left;
+
+                BoxCollider2D bc = boardLeft.GetComponent<BoxCollider2D>();
+                UnityEngine.Assertions.Assert.IsNotNull(bc);
+                boardHeights[(int)pos] = bc.size.y;
+
+                boardLeftRigidbody = boardLeft.GetComponent<Rigidbody2D>();
+                UnityEngine.Assertions.Assert.IsNotNull(boardLeftRigidbody);
+            }
+            {
+                Pong.PlayerConstant.Position pos = Pong.PlayerConstant.Position.Right;
+
+                BoxCollider2D bc = boardRight.GetComponent<BoxCollider2D>();
+                UnityEngine.Assertions.Assert.IsNotNull(bc);
+                boardHeights[(int)pos] = bc.size.y;
+
+                boardRightRigidbody = boardRight.GetComponent<Rigidbody2D>();
+                UnityEngine.Assertions.Assert.IsNotNull(boardRightRigidbody);
+            }
         }
 
         private void SceneShotBall()
         {
             CreateBall();
             AddGoalObserver(ballScript);
+
+            // ballのRigidbodyとradiusを取得
+            ballRigidbody = ball.GetComponent<Rigidbody2D>();
+            ballRadius = ball.GetComponent<CircleCollider2D>().radius;
+
             scene = Scene.Playing;
         }
 
         private void ScenePlaying()
         {
+            UnityEngine.Assertions.Assert.IsNotNull(boardLeft);
+            UnityEngine.Assertions.Assert.IsNotNull(boardRight);
+
+            float boardHeight = 0.0f;
+            Vector3 boardPosition;
+            {
+                Board bd = boardLeft.GetComponent<Board>();
+                UnityEngine.Assertions.Assert.IsNotNull(bd);
+                BoxCollider2D bc = boardLeft.GetComponent<BoxCollider2D>();
+                UnityEngine.Assertions.Assert.IsNotNull(bc);
+                boardHeight = bc.size.y;
+                Rigidbody2D rbody = boardLeft.GetComponent<Rigidbody2D>();
+                boardPosition = rbody.transform.position;
+            }
+
+            float radius = 0.0f;
+            Vector3 ballPosition;
+            {
+                Ball bl = ball.GetComponent<Ball>();
+                UnityEngine.Assertions.Assert.IsNotNull(bl);
+
+                Rigidbody2D rbody = ball.GetComponent<Rigidbody2D>();
+                ballPosition = rbody.transform.position;
+            }
+
+            BoardInfo boardInfo = new BoardInfo(boardHeight, boardPosition);
+            BallInfo ballInfo = new BallInfo(radius, ballPosition);
+
+            boardInfo = boardController[(int)Pong.PlayerConstant.Position.Left].MoveBoard(boardInfo, ballInfo);
         }
 
         private void SceneGoalSeStart()

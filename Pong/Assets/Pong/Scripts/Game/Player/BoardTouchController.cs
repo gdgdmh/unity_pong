@@ -28,8 +28,17 @@ namespace Pong
         /// <summary>
         /// 移動
         /// </summary>
-        public void MoveBoard()
+        /// <param name="board">自分の板情報</param>
+        /// <param name="ball">ボール情報</param>
+        /// <returns>移動した後の板の情報</returns>
+        public BoardInfo MoveBoard(BoardInfo board, BallInfo ball)
         {
+            Debug.Log(string.Format("board x = {0} y = {1} z = {2}",
+                board.Position.x, board.Position.y, board.Position.z));
+            Debug.Log(string.Format("ball x = {0} y = {1} z = {2}",
+                ball.Position.x, ball.Position.y, ball.Position.z));
+
+            return board;
         }
 
         private void Update()

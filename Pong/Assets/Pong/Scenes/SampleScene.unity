@@ -228,6 +228,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75dd2e6cdcfb34a85bc6945a0a47f20d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boardLeft: {fileID: 1562729922}
+  boardRight: {fileID: 1091134068}
 --- !u!4 &250609223
 Transform:
   m_ObjectHideFlags: 0

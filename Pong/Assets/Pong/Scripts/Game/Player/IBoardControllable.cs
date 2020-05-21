@@ -12,6 +12,9 @@ namespace Pong
         /// <summary>
         /// 移動
         /// </summary>
-        void MoveBoard();
+        /// <param name="board">自分の板情報</param>
+        /// <param name="ball">ボール情報</param>
+        /// <returns>移動した後の板の情報</returns>
+        BoardInfo MoveBoard(BoardInfo board, BallInfo ball);
     }
 }

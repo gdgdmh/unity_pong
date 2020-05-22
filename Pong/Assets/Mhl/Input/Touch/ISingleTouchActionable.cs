@@ -75,10 +75,19 @@ namespace Mhl
         bool IsDragging();
 
         /// <summary>
-        /// タッチ位置を取得する
+        /// ワールド座標を取得する
         /// </summary>
-        /// <returns>座標</returns>
-        Vector3 GetTouchPosition();
+        /// <param name="camera">カメラ</param>
+        /// <param name="position">変換前の座標</param>
+        /// <returns>変換された座標</returns>
+        Vector3 GetWorldPosition(UnityEngine.Camera camera, Vector3 position);
+
+        /// <summary>
+        /// タッチ座標を取得する
+        /// </summary>
+        /// <param name="camera">カメラ</param>
+        /// <returns>ワールドのタッチ座標</returns>
+        Vector3 GetTouchPosition(UnityEngine.Camera camera);
 
         /// <summary>
         /// システムから取得できる無加工のタッチ位置を取得する

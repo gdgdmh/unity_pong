@@ -38,6 +38,7 @@ namespace Pong
         private float[] boardHeights = new float[Pong.PlayerConstant.Count];
         private Rigidbody2D boardLeftRigidbody = null;
         private Rigidbody2D boardRightRigidbody = null;
+        private Camera mainCamera;
 
         /// <summary>
         /// コンストラクタ
@@ -52,8 +53,11 @@ namespace Pong
         {
             scene = Scene.Initialize;
 
+            mainCamera = FindObjectOfType<Camera>();
+            UnityEngine.Assertions.Assert.IsNotNull(mainCamera);
+
             boardController[(int)Pong.PlayerConstant.Position.Left] =
-                new Pong.BoardTouchController(Pong.PlayerConstant.Position.Left, touchAction);
+                new Pong.BoardTouchController(Pong.PlayerConstant.Position.Left, touchAction, mainCamera);
         }
 
         // Update is called once per frame
@@ -113,12 +117,7 @@ namespace Pong
             BallInfo ballInfo = CreateBallInfo();
             boardInfoLeft = boardController[(int)Pong.PlayerConstant.Position.Left].MoveBoard(
                 boardInfoLeft, ballInfo);
-
-            /*
-            BoardInfo boardInfoRight = CreateBoardInfo(PlayerConstant.Position.Right);
-            boardInfoRight = boardController[(int)Pong.PlayerConstant.Position.Right].MoveBoard(
-                boardInfoRight, ballInfo);
-            */
+            boardLeftRigidbody.position = ToVector2(boardInfoLeft.Position);
         }
 
         private void SceneGoalSeStart()
@@ -251,6 +250,16 @@ namespace Pong
         private Vector3 ToVector3(Vector2 vector2)
         {
             return new Vector3(vector2.x, vector2.y, 0);
+        }
+
+        /// <summary>
+        /// Vector3をVector2に変換
+        /// </summary>
+        /// <param name="vector3">変換元</param>
+        /// <returns>変換されたVector2</returns>
+        private Vector2 ToVector2(Vector3 vector3)
+        {
+            return new Vector2(vector3.x, vector3.y);
         }
 
         /// <summary>

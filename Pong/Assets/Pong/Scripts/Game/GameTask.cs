@@ -92,71 +92,33 @@ namespace Pong
             scene = Scene.ShotBall;
 
             // boardの情報を取得
-            {
-                Pong.PlayerConstant.Position pos = Pong.PlayerConstant.Position.Left;
+            SetBoardInfo(Pong.PlayerConstant.Position.Left);
+            SetBoardInfo(Pong.PlayerConstant.Position.Right);
 
-                BoxCollider2D bc = boardLeft.GetComponent<BoxCollider2D>();
-                UnityEngine.Assertions.Assert.IsNotNull(bc);
-                boardHeights[(int)pos] = bc.size.y;
-
-                boardLeftRigidbody = boardLeft.GetComponent<Rigidbody2D>();
-                UnityEngine.Assertions.Assert.IsNotNull(boardLeftRigidbody);
-            }
-            {
-                Pong.PlayerConstant.Position pos = Pong.PlayerConstant.Position.Right;
-
-                BoxCollider2D bc = boardRight.GetComponent<BoxCollider2D>();
-                UnityEngine.Assertions.Assert.IsNotNull(bc);
-                boardHeights[(int)pos] = bc.size.y;
-
-                boardRightRigidbody = boardRight.GetComponent<Rigidbody2D>();
-                UnityEngine.Assertions.Assert.IsNotNull(boardRightRigidbody);
-            }
         }
 
         private void SceneShotBall()
         {
             CreateBall();
             AddGoalObserver(ballScript);
-
-            // ballのRigidbodyとradiusを取得
-            ballRigidbody = ball.GetComponent<Rigidbody2D>();
-            ballRadius = ball.GetComponent<CircleCollider2D>().radius;
+            // ボールの情報を設定
+            SetBallInfo();
 
             scene = Scene.Playing;
         }
 
         private void ScenePlaying()
         {
-            UnityEngine.Assertions.Assert.IsNotNull(boardLeft);
-            UnityEngine.Assertions.Assert.IsNotNull(boardRight);
+            BoardInfo boardInfoLeft = CreateBoardInfo(PlayerConstant.Position.Left);
+            BallInfo ballInfo = CreateBallInfo();
+            boardInfoLeft = boardController[(int)Pong.PlayerConstant.Position.Left].MoveBoard(
+                boardInfoLeft, ballInfo);
 
-            float boardHeight = 0.0f;
-            Vector3 boardPosition;
-            {
-                Board bd = boardLeft.GetComponent<Board>();
-                UnityEngine.Assertions.Assert.IsNotNull(bd);
-                BoxCollider2D bc = boardLeft.GetComponent<BoxCollider2D>();
-                UnityEngine.Assertions.Assert.IsNotNull(bc);
-                boardHeight = bc.size.y;
-                Rigidbody2D rbody = boardLeft.GetComponent<Rigidbody2D>();
-                boardPosition = rbody.transform.position;
-            }
-
-            float radius = 0.0f;
-            Vector3 ballPosition;
-            {
-                Ball bl = ball.GetComponent<Ball>();
-                UnityEngine.Assertions.Assert.IsNotNull(bl);
-
-                Rigidbody2D rbody = ball.GetComponent<Rigidbody2D>();
-                ballPosition = rbody.transform.position;
-            }
-
-            BoardInfo boardInfo = new BoardInfo(boardHeight, boardPosition);
-            BallInfo ballInfo = new BallInfo(radius, ballPosition);
-
-            boardInfo = boardController[(int)Pong.PlayerConstant.Position.Left].MoveBoard(boardInfo, ballInfo);
+            /*
+            BoardInfo boardInfoRight = CreateBoardInfo(PlayerConstant.Position.Right);
+            boardInfoRight = boardController[(int)Pong.PlayerConstant.Position.Right].MoveBoard(
+                boardInfoRight, ballInfo);
+            */
         }
 
         private void SceneGoalSeStart()
@@ -245,6 +207,80 @@ namespace Pong
         private void RequestRemoveObserver(Pong.Ball ballScript)
         {
             ballScript.RequestRemoveObserver(this);
+        }
+
+        /// <summary>
+        /// ボード情報の設定
+        /// </summary>
+        /// <param name="pos">設定するボードの位置</param>
+        private void SetBoardInfo(Pong.PlayerConstant.Position pos)
+        {
+            // Rigidbodyの取得とBoxCllider2DからHeightの取得
+            BoxCollider2D bc = null;
+            if (pos == Pong.PlayerConstant.Position.Left)
+            {
+                bc = boardLeft.GetComponent<BoxCollider2D>();
+                boardLeftRigidbody = boardLeft.GetComponent<Rigidbody2D>();
+                UnityEngine.Assertions.Assert.IsNotNull(boardLeftRigidbody);
+            }
+            else
+            {
+                bc = boardRight.GetComponent<BoxCollider2D>();
+                boardRightRigidbody = boardRight.GetComponent<Rigidbody2D>();
+                UnityEngine.Assertions.Assert.IsNotNull(boardRightRigidbody);
+            }
+            UnityEngine.Assertions.Assert.IsNotNull(bc);
+            boardHeights[(int)pos] = bc.size.y;
+        }
+
+        /// <summary>
+        /// ボールの情報設定
+        /// </summary>
+        private void SetBallInfo()
+        {
+            // ballのRigidbodyとradiusを取得
+            ballRigidbody = ball.GetComponent<Rigidbody2D>();
+            ballRadius = ball.GetComponent<CircleCollider2D>().radius;
+        }
+
+        /// <summary>
+        /// Vector2をVector3に変換
+        /// </summary>
+        /// <param name="vector2">変換元</param>
+        /// <returns>変換されたVector3</returns>
+        private Vector3 ToVector3(Vector2 vector2)
+        {
+            return new Vector3(vector2.x, vector2.y, 0);
+        }
+
+        /// <summary>
+        /// ボード情報を作成
+        /// </summary>
+        /// <param name="position">対象のボードの位置</param>
+        /// <returns>ボード情報</returns>
+        private BoardInfo CreateBoardInfo(Pong.PlayerConstant.Position position)
+        {
+            UnityEngine.Assertions.Assert.IsNotNull(boardHeights);
+            if (position == Pong.PlayerConstant.Position.Left)
+            {
+                UnityEngine.Assertions.Assert.IsNotNull(boardLeftRigidbody);
+                return new BoardInfo(boardHeights[(int)position], ToVector3(boardLeftRigidbody.position));
+            }
+            else
+            {
+                UnityEngine.Assertions.Assert.IsNotNull(boardRightRigidbody);
+                return new BoardInfo(boardHeights[(int)position], ToVector3(boardRightRigidbody.position));
+            }
+        }
+
+        /// <summary>
+        /// ボール情報の作成
+        /// </summary>
+        /// <returns>ボール情報</returns>
+        private BallInfo CreateBallInfo()
+        {
+            UnityEngine.Assertions.Assert.IsNotNull(ballRigidbody);
+            return new BallInfo(ballRadius, ToVector3(ballRigidbody.position));
         }
     }
 }

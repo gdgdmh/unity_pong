@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Pong
 {
+    /// <summary>
+    /// ボードクラス
+    /// </summary>
     public class Board : MonoBehaviour
     {
         public GameObject board;

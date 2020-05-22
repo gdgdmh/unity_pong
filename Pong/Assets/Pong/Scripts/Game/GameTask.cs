@@ -38,7 +38,11 @@ namespace Pong
         private float[] boardHeights = new float[Pong.PlayerConstant.Count];
         private Rigidbody2D boardLeftRigidbody = null;
         private Rigidbody2D boardRightRigidbody = null;
+        // カメラ
         private Camera mainCamera;
+        // サウンド
+        public AudioClip pointSound;
+        private AudioSource audioSource;
 
         /// <summary>
         /// コンストラクタ
@@ -58,6 +62,8 @@ namespace Pong
 
             boardController[(int)Pong.PlayerConstant.Position.Left] =
                 new Pong.BoardTouchController(Pong.PlayerConstant.Position.Left, touchAction, mainCamera);
+
+            InitializeSound();
         }
 
         // Update is called once per frame
@@ -122,12 +128,16 @@ namespace Pong
 
         private void SceneGoalSeStart()
         {
+            PlayPointSound();
             scene = Scene.GoalSeWait;
         }
 
         private void SceneGoalSeWait()
         {
-            scene = Scene.Scoring;
+            if (IsPointSoundPlaying() == false)
+            {
+                scene = Scene.Scoring;
+            }
         }
 
         private void SceneScoring()
@@ -290,6 +300,34 @@ namespace Pong
         {
             UnityEngine.Assertions.Assert.IsNotNull(ballRigidbody);
             return new BallInfo(ballRadius, ToVector3(ballRigidbody.position));
+        }
+
+        /// <summary>
+        /// サウンドの初期化
+        /// </summary>
+        private void InitializeSound()
+        {
+            // 設定されているAudio系のデータをチェック
+            UnityEngine.Assertions.Assert.IsNotNull(pointSound);
+            audioSource = GetComponent<AudioSource>();
+            UnityEngine.Assertions.Assert.IsNotNull(audioSource);
+        }
+
+        /// <summary>
+        /// ポイントサウンドの再生
+        /// </summary>
+        private void PlayPointSound()
+        {
+            audioSource.PlayOneShot(pointSound);
+        }
+
+        /// <summary>
+        /// ポイントサウンドが再生されているか
+        /// </summary>
+        /// <returns>trueなら再生されている</returns>
+        private bool IsPointSoundPlaying()
+        {
+            return audioSource.isPlaying;
         }
     }
 }

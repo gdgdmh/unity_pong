@@ -26,6 +26,7 @@ namespace Pong
         // プレイヤーのスコア
         private Pong.PlayerScore score = new Pong.PlayerScore();
         private Pong.ScoreSubject scoreSubject = new Pong.ScoreSubject();
+        private Pong.IGameRulable gameRule = new Pong.GameRuleTenPoint();
         // シーン管理変数
         private Scene scene;
         // タッチ
@@ -176,7 +177,16 @@ namespace Pong
             // スコア更新通知
             scoreSubject.NotifyObservers(score);
 
-            scene = Scene.GoalSeStart;
+            // ゲーム終了したか
+            if (gameRule.CheckEnd(score))
+            {
+                scene = Scene.Ended;
+            }
+            else
+            {
+                scene = Scene.GoalSeStart;
+            }
+
         }
 
         /// <summary>

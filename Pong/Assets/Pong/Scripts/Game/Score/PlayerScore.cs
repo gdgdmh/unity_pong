@@ -11,6 +11,9 @@ namespace Pong
     {
         private Mhl.Value[] scores = new Mhl.Value[Pong.PlayerConstant.Count];
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public PlayerScore()
         {
             // new

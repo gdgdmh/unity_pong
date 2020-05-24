@@ -17,6 +17,10 @@ namespace Pong
             Ended       // 終了
         };
 
+        private static readonly string WinResultMessage = "勝ち";
+        private static readonly string LoseResultMessage = "負け";
+        private static readonly string InterfaceResultMessage = "タッチするとメニューに戻ります";
+
         // ballオブジェクト
         private GameObject ball;
         // ballスクリプト
@@ -44,6 +48,10 @@ namespace Pong
         // サウンド
         public AudioClip pointSound;
         private AudioSource audioSource;
+        // 結果
+        [SerializeField] private UnityEngine.UI.Text resultTextLeft = null;
+        [SerializeField] private UnityEngine.UI.Text resultTextRight = null;
+        [SerializeField] private UnityEngine.UI.Text resultTextInterface = null;
 
         /// <summary>
         /// コンストラクタ
@@ -65,6 +73,8 @@ namespace Pong
                 new Pong.BoardTouchController(Pong.PlayerConstant.Position.Left, touchAction, mainCamera);
 
             InitializeSound();
+            InitializeResult();
+
         }
 
         // Update is called once per frame
@@ -180,6 +190,16 @@ namespace Pong
             // ゲーム終了したか
             if (gameRule.CheckEnd(score))
             {
+                // 文字列の設定
+                if (gameRule.GetWinner(score) == PlayerConstant.Position.Left)
+                {
+                    SetResultLeftWin();
+                }
+                else
+                {
+                    SetResultRightWin();
+                }
+
                 scene = Scene.Ended;
             }
             else
@@ -338,6 +358,43 @@ namespace Pong
         private bool IsPointSoundPlaying()
         {
             return audioSource.isPlaying;
+        }
+
+        /// <summary>
+        /// 結果の初期化
+        /// </summary>
+        private void InitializeResult()
+        {
+            UnityEngine.Assertions.Assert.IsNotNull(resultTextLeft);
+            UnityEngine.Assertions.Assert.IsNotNull(resultTextRight);
+            UnityEngine.Assertions.Assert.IsNotNull(resultTextInterface);            
+            resultTextLeft.text = "";
+            resultTextRight.text = "";
+            resultTextInterface.text = "";
+        }
+
+        /// <summary>
+        /// 左プレイヤーの勝ち設定
+        /// </summary>
+        private void SetResultLeftWin()
+        {
+            UnityEngine.Assertions.Assert.IsNotNull(resultTextLeft);
+            UnityEngine.Assertions.Assert.IsNotNull(resultTextRight);
+            resultTextLeft.text = WinResultMessage;
+            resultTextRight.text = LoseResultMessage;
+            resultTextInterface.text = InterfaceResultMessage;
+        }
+
+        /// <summary>
+        /// 右プレイヤーの勝ち設定
+        /// </summary>
+        private void SetResultRightWin()
+        {
+            UnityEngine.Assertions.Assert.IsNotNull(resultTextLeft);
+            UnityEngine.Assertions.Assert.IsNotNull(resultTextRight);
+            resultTextLeft.text = LoseResultMessage;
+            resultTextRight.text = WinResultMessage;
+            resultTextInterface.text = InterfaceResultMessage;
         }
     }
 }

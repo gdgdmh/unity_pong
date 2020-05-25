@@ -71,12 +71,21 @@ namespace Pong
             mainCamera = FindObjectOfType<Camera>();
             UnityEngine.Assertions.Assert.IsNotNull(mainCamera);
 
+            {
+                IBoardControllerCreatable creatable = new BoardControllerFactory(PlayerConstant.Position.Left, touchAction, mainCamera);
+                boardController[(int)Pong.PlayerConstant.Position.Left] = creatable.Create(BoardControllerConstant.Type.Touch);
+            }
+            {
+                IBoardControllerCreatable creatable = new BoardControllerFactory(PlayerConstant.Position.Right, touchAction, mainCamera);
+                boardController[(int)Pong.PlayerConstant.Position.Right] = creatable.Create(BoardControllerConstant.Type.Cpu1);
+            }
+
+            /*
             boardController[(int)Pong.PlayerConstant.Position.Left] =
                 new Pong.BoardTouchController(Pong.PlayerConstant.Position.Left, touchAction, mainCamera);
-
             boardController[(int)Pong.PlayerConstant.Position.Right] =
                 new Pong.BoardCpu1Controller();
-
+            */
 
             InitializeSound();
             InitializeResult();

@@ -12,6 +12,12 @@ namespace Pong
             Right   // 右側プレイヤー
         };
 
+        public enum Type : int
+        {
+            Man,    // 人間
+            Cpu     // CPU
+        };
+
         public static readonly int Count = 2; // プレイヤーの人数
     }
 }

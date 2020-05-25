@@ -362,11 +362,15 @@ namespace Pong
 
         private void UpdateBoardLeft()
         {
-            BoardInfo boardInfoLeft = CreateBoardInfo(PlayerConstant.Position.Left);
-            BallInfo ballInfo = CreateBallInfo();
-            boardInfoLeft = boardController[(int)Pong.PlayerConstant.Position.Left].MoveBoard(
-                boardInfoLeft, ballInfo);
-            boardLeftRigidbody.position = ToVector2(boardInfoLeft.Position);
+            if (ballRigidbody != null)
+            {
+                BoardInfo boardInfoLeft = CreateBoardInfo(PlayerConstant.Position.Left);
+                BallInfo ballInfo = CreateBallInfo();
+                boardInfoLeft = boardController[(int)Pong.PlayerConstant.Position.Left].MoveBoard(
+                    boardInfoLeft, ballInfo);
+                boardLeftRigidbody.position = ToVector2(boardInfoLeft.Position);
+
+            }
         }
 
         /// <summary>

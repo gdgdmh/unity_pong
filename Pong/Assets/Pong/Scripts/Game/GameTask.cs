@@ -74,6 +74,10 @@ namespace Pong
             boardController[(int)Pong.PlayerConstant.Position.Left] =
                 new Pong.BoardTouchController(Pong.PlayerConstant.Position.Left, touchAction, mainCamera);
 
+            boardController[(int)Pong.PlayerConstant.Position.Right] =
+                new Pong.BoardCpu1Controller();
+
+
             InitializeSound();
             InitializeResult();
 
@@ -129,26 +133,26 @@ namespace Pong
             // ボールの情報を設定
             SetBallInfo();
 
-            UpdateBoardLeft();
+            UpdateBoard();
 
             scene = Scene.Playing;
         }
 
         private void ScenePlaying()
         {
-            UpdateBoardLeft();
+            UpdateBoard();
         }
 
         private void SceneGoalSeStart()
         {
-            UpdateBoardLeft();
+            UpdateBoard();
             PlayPointSound();
             scene = Scene.GoalSeWait;
         }
 
         private void SceneGoalSeWait()
         {
-            UpdateBoardLeft();
+            UpdateBoard();
             if (IsPointSoundPlaying() == false)
             {
                 scene = Scene.Scoring;
@@ -157,7 +161,7 @@ namespace Pong
 
         private void SceneScoring()
         {
-            UpdateBoardLeft();
+            UpdateBoard();
             scene = Scene.ShotBall;
         }
 
@@ -356,21 +360,35 @@ namespace Pong
         /// <returns>ボール情報</returns>
         private BallInfo CreateBallInfo()
         {
+            if (ballRigidbody == null)
+            {
+                return null;
+            }
             UnityEngine.Assertions.Assert.IsNotNull(ballRigidbody);
             return new BallInfo(ballRadius, ToVector3(ballRigidbody.position));
         }
 
+        private void UpdateBoard()
+        {
+            BoardInfo boardInfoLeft = CreateBoardInfo(PlayerConstant.Position.Left);
+            BoardInfo boardInfoRight = CreateBoardInfo(PlayerConstant.Position.Right);
+            BallInfo ballInfo = CreateBallInfo();
+            boardInfoLeft = boardController[(int)Pong.PlayerConstant.Position.Left].MoveBoard(
+                boardInfoLeft, ballInfo);
+            boardLeftRigidbody.position = ToVector2(boardInfoLeft.Position);
+
+            boardInfoRight = boardController[(int)Pong.PlayerConstant.Position.Right].MoveBoard(
+                boardInfoRight, ballInfo);
+            boardRightRigidbody.position = ToVector2(boardInfoRight.Position);
+        }
+
         private void UpdateBoardLeft()
         {
-            if (ballRigidbody != null)
-            {
-                BoardInfo boardInfoLeft = CreateBoardInfo(PlayerConstant.Position.Left);
-                BallInfo ballInfo = CreateBallInfo();
-                boardInfoLeft = boardController[(int)Pong.PlayerConstant.Position.Left].MoveBoard(
-                    boardInfoLeft, ballInfo);
-                boardLeftRigidbody.position = ToVector2(boardInfoLeft.Position);
-
-            }
+            BoardInfo boardInfoLeft = CreateBoardInfo(PlayerConstant.Position.Left);
+            BallInfo ballInfo = CreateBallInfo();
+            boardInfoLeft = boardController[(int)Pong.PlayerConstant.Position.Left].MoveBoard(
+                boardInfoLeft, ballInfo);
+            boardLeftRigidbody.position = ToVector2(boardInfoLeft.Position);
         }
 
         /// <summary>

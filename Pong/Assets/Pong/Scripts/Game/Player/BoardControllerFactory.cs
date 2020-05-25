@@ -39,7 +39,7 @@ namespace Pong
                 case BoardControllerConstant.Type.Touch:
                     return new BoardTouchController(position, touchAction, camera);
                 case BoardControllerConstant.Type.Cpu1:
-                    return new BoardCpu1Controller();
+                    return new BoardCpu1Controller(position);
             }
             return null;
         }

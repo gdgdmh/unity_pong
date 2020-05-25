@@ -80,13 +80,6 @@ namespace Pong
                 boardController[(int)Pong.PlayerConstant.Position.Right] = creatable.Create(BoardControllerConstant.Type.Cpu1);
             }
 
-            /*
-            boardController[(int)Pong.PlayerConstant.Position.Left] =
-                new Pong.BoardTouchController(Pong.PlayerConstant.Position.Left, touchAction, mainCamera);
-            boardController[(int)Pong.PlayerConstant.Position.Right] =
-                new Pong.BoardCpu1Controller();
-            */
-
             InitializeSound();
             InitializeResult();
 

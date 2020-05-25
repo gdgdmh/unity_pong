@@ -11,10 +11,11 @@ namespace Pong
             Initialize, // 初期化
             ShotBall,   // ボール打ち出し
             Playing,    // プレイ中
-            GoalSeStart,  // ゴールSE開始
+            GoalSeStart,// ゴールSE開始
             GoalSeWait, // ゴールSE終了待ち
             Scoring,    // 加点処理
-            Ended       // 終了
+            Ended,      // 終了
+            ChangeScene,// シーン切り替え
         };
 
         private static readonly string WinResultMessage = "勝ち";
@@ -52,6 +53,7 @@ namespace Pong
         [SerializeField] private UnityEngine.UI.Text resultTextLeft = null;
         [SerializeField] private UnityEngine.UI.Text resultTextRight = null;
         [SerializeField] private UnityEngine.UI.Text resultTextInterface = null;
+        bool isResultTouchPushing = false;
 
         /// <summary>
         /// コンストラクタ
@@ -103,9 +105,12 @@ namespace Pong
                 case Scene.Ended:
                     SceneEnded();
                     break;
+                case Scene.ChangeScene:
+                    SceneChangeScene();
+                    break;
             }
             touchAction.Update();
-            touchAction.PrintDifference();
+            //touchAction.PrintDifference();
         }
 
         private void SceneInitialize()
@@ -115,7 +120,6 @@ namespace Pong
             // boardの情報を取得
             SetBoardInfo(Pong.PlayerConstant.Position.Left);
             SetBoardInfo(Pong.PlayerConstant.Position.Right);
-
         }
 
         private void SceneShotBall()
@@ -125,26 +129,26 @@ namespace Pong
             // ボールの情報を設定
             SetBallInfo();
 
+            UpdateBoardLeft();
+
             scene = Scene.Playing;
         }
 
         private void ScenePlaying()
         {
-            BoardInfo boardInfoLeft = CreateBoardInfo(PlayerConstant.Position.Left);
-            BallInfo ballInfo = CreateBallInfo();
-            boardInfoLeft = boardController[(int)Pong.PlayerConstant.Position.Left].MoveBoard(
-                boardInfoLeft, ballInfo);
-            boardLeftRigidbody.position = ToVector2(boardInfoLeft.Position);
+            UpdateBoardLeft();
         }
 
         private void SceneGoalSeStart()
         {
+            UpdateBoardLeft();
             PlayPointSound();
             scene = Scene.GoalSeWait;
         }
 
         private void SceneGoalSeWait()
         {
+            UpdateBoardLeft();
             if (IsPointSoundPlaying() == false)
             {
                 scene = Scene.Scoring;
@@ -153,11 +157,29 @@ namespace Pong
 
         private void SceneScoring()
         {
+            UpdateBoardLeft();
             scene = Scene.ShotBall;
         }
 
         private void SceneEnded()
         {
+            if (touchAction.IsTouchEnded())
+            {
+                if (isResultTouchPushing)
+                {
+                    // タッチしたままEndedにきた時に1度だけタッチを無効にする
+                    isResultTouchPushing = false;
+                }
+                else
+                {
+                    scene = Scene.ChangeScene;
+                }
+            }
+        }
+
+        private void SceneChangeScene()
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
         }
 
         /// <summary>
@@ -198,6 +220,12 @@ namespace Pong
                 else
                 {
                     SetResultRightWin();
+                }
+
+                // タッチしたままEndにいった
+                if (touchAction.IsDragging() || touchAction.IsTouchStationary())
+                {
+                    isResultTouchPushing = true;
                 }
 
                 scene = Scene.Ended;
@@ -330,6 +358,15 @@ namespace Pong
         {
             UnityEngine.Assertions.Assert.IsNotNull(ballRigidbody);
             return new BallInfo(ballRadius, ToVector3(ballRigidbody.position));
+        }
+
+        private void UpdateBoardLeft()
+        {
+            BoardInfo boardInfoLeft = CreateBoardInfo(PlayerConstant.Position.Left);
+            BallInfo ballInfo = CreateBallInfo();
+            boardInfoLeft = boardController[(int)Pong.PlayerConstant.Position.Left].MoveBoard(
+                boardInfoLeft, ballInfo);
+            boardLeftRigidbody.position = ToVector2(boardInfoLeft.Position);
         }
 
         /// <summary>

@@ -40,10 +40,10 @@ namespace Pong
         /// <returns>移動した後の板の情報</returns>
         public BoardInfo MoveBoard(BoardInfo board, BallInfo ball)
         {
-            Debug.Log(string.Format("board x = {0} y = {1} z = {2}",
-                board.Position.x, board.Position.y, board.Position.z));
-            Debug.Log(string.Format("ball x = {0} y = {1} z = {2}",
-                ball.Position.x, ball.Position.y, ball.Position.z));
+            //Debug.Log(string.Format("board x = {0} y = {1} z = {2}",
+            //    board.Position.x, board.Position.y, board.Position.z));
+            //Debug.Log(string.Format("ball x = {0} y = {1} z = {2}",
+            //    ball.Position.x, ball.Position.y, ball.Position.z));
 
             if (touchAction.IsDragging())
             {

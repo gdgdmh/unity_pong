@@ -40,6 +40,8 @@ namespace Pong
                     return new BoardTouchController(position, touchAction, camera);
                 case BoardControllerConstant.Type.Cpu1:
                     return new BoardCpu1Controller(position);
+                case BoardControllerConstant.Type.Cpu2:
+                    return new BoardCpu2Controller(position);
             }
             return null;
         }

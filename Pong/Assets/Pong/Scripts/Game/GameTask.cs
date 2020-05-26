@@ -77,7 +77,7 @@ namespace Pong
             }
             {
                 IBoardControllerCreatable creatable = new BoardControllerFactory(PlayerConstant.Position.Right, touchAction, mainCamera);
-                boardController[(int)Pong.PlayerConstant.Position.Right] = creatable.Create(BoardControllerConstant.Type.Cpu1);
+                boardController[(int)Pong.PlayerConstant.Position.Right] = creatable.Create(BoardControllerConstant.Type.Cpu2);
             }
 
             InitializeSound();

@@ -13,7 +13,8 @@ namespace Pong
         public enum Type : int
         {
             Touch,  // タッチ操作
-            Cpu1    // CPU1
+            Cpu1,   // CPU1
+            Cpu2    // CPU2
         };
     }
 }

@@ -15,7 +15,8 @@ namespace Pong
         public enum Type : int
         {
             Man,    // 人間
-            Cpu     // CPU
+            Cpu1,   // CPU
+            Cpu2
         };
 
         public static readonly int Count = 2; // プレイヤーの人数

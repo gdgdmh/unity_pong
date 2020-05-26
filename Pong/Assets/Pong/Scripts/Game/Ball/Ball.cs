@@ -21,6 +21,9 @@ namespace Pong
         public static readonly float MaxAngle = 360.0f; // 360度
         public static readonly float HalfAngle = MaxAngle / 2; // 180度
         public static readonly float QuarterAngle = MaxAngle / 4; // 90度
+        public static readonly int RandomAngleMin = -15; // 玉のランダム角度(最小)
+        public static readonly int RandomAngleMax = 15;  // 玉のランダム角度(最大)
+
 
         public GameObject ball;
         public Rigidbody2D rbody;
@@ -175,7 +178,9 @@ namespace Pong
         /// </summary>
         private void BoundBoard()
         {
-            rbody.velocity = GetMoveVelocity(HalfAngle - moveAngle, speed);
+            // 反射させて、少しランダムな角度を設定
+            float angle = GetRandomAngle(HalfAngle - moveAngle);
+            rbody.velocity = GetMoveVelocity(angle, speed);
         }
 
         /// <summary>
@@ -183,7 +188,32 @@ namespace Pong
         /// </summary>
         private void BoundWall()
         {
+            // 反射させる
             rbody.velocity = GetMoveVelocity(MaxAngle - moveAngle, speed);
+        }
+
+        /// <summary>
+        /// 玉のランダムな角度を取得する
+        /// </summary>
+        /// <param name="angle">基準になる角度</param>
+        /// <returns>玉の角度</returns>
+        private float GetRandomAngle(float angle)
+        {
+            return CalcRandomAngle(angle, RandomAngleMin, RandomAngleMax);
+        }
+
+        /// <summary>
+        /// ランダムな角度を計算する
+        /// </summary>
+        /// <param name="angle">基準の角度</param>
+        /// <param name="rangeMin">最小ランダム値</param>
+        /// <param name="rangeMax">最大ランダム値</param>
+        /// <returns>ランダムな角度</returns>
+        private float CalcRandomAngle(float angle, int rangeMin, int rangeMax)
+        {
+            int randomAngle = rand.GetRange(rangeMin, rangeMax);
+            Debug.Log(string.Format("angle = {0} random = {1}", angle, angle + randomAngle));
+            return angle + randomAngle;
         }
     }
 }

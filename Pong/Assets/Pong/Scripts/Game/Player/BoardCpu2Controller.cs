@@ -7,8 +7,8 @@ namespace Pong
     public class BoardCpu2Controller : Pong.IBoardControllable
     {
         private static readonly float MoveSpeed = 0.12f; // 移動速度
-        //private static readonly float SlowReflectionPositionX = 2.0f; // 遅い反応に使用する位置
         private static readonly float BoardMarginDivision = 6.0f; // ボードのマージンに使用する除算倍率
+
         private Pong.PlayerConstant.Position position;
 
         public BoardCpu2Controller(Pong.PlayerConstant.Position position)

@@ -37,6 +37,7 @@ namespace Pong
         // タッチ
         private Mhl.ISingleTouchActionable touchAction = new Mhl.SingleTouchActionEditor();
         // プレイヤー
+        private Pong.PlayerConstant.Type[] playerTypes = new Pong.PlayerConstant.Type[Pong.PlayerConstant.Count];
         private IBoardControllable[] boardController = new IBoardControllable[Pong.PlayerConstant.Count];
         // 板
         [SerializeField] public GameObject boardLeft;
@@ -61,6 +62,8 @@ namespace Pong
         public GameTask()
         {
             scene = Scene.Initialize;
+            playerTypes[(int)Pong.PlayerConstant.Position.Left] = Pong.PlayerConstant.Type.Man;
+            playerTypes[(int)Pong.PlayerConstant.Position.Right] = Pong.PlayerConstant.Type.Cpu1;
         }
 
         // Start is called before the first frame update
@@ -71,6 +74,14 @@ namespace Pong
             mainCamera = FindObjectOfType<Camera>();
             UnityEngine.Assertions.Assert.IsNotNull(mainCamera);
 
+            for (int i = 0; i < boardController.Length; ++i)
+            {
+                IBoardControllerCreatable creatable =
+                    new BoardControllerFactory((Pong.PlayerConstant.Position)i,
+                    touchAction, mainCamera);
+                boardController[i] = creatable.Create(PlayerTypeToController(playerTypes[i]));
+            }
+            /*
             {
                 IBoardControllerCreatable creatable = new BoardControllerFactory(PlayerConstant.Position.Left, touchAction, mainCamera);
                 boardController[(int)Pong.PlayerConstant.Position.Left] = creatable.Create(BoardControllerConstant.Type.Touch);
@@ -79,6 +90,7 @@ namespace Pong
                 IBoardControllerCreatable creatable = new BoardControllerFactory(PlayerConstant.Position.Right, touchAction, mainCamera);
                 boardController[(int)Pong.PlayerConstant.Position.Right] = creatable.Create(BoardControllerConstant.Type.Cpu2);
             }
+            */
 
             InitializeSound();
             InitializeResult();
@@ -185,7 +197,27 @@ namespace Pong
 
         private void SceneChangeScene()
         {
+            // タイトルに移動
             UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
+        }
+
+        /// <summary>
+        /// プレイヤーからボードコントローラーに変換する
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private Pong.BoardControllerConstant.Type PlayerTypeToController(Pong.PlayerConstant.Type type)
+        {
+            switch (type)
+            {
+                case Pong.PlayerConstant.Type.Man:
+                    return Pong.BoardControllerConstant.Type.Touch;
+                case Pong.PlayerConstant.Type.Cpu1:
+                    return Pong.BoardControllerConstant.Type.Cpu1;
+                case Pong.PlayerConstant.Type.Cpu2:
+                    return Pong.BoardControllerConstant.Type.Cpu2;
+            }
+            return Pong.BoardControllerConstant.Type.Touch;
         }
 
         /// <summary>

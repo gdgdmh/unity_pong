@@ -18,6 +18,9 @@ namespace Pong
         public static readonly float StartSpeed = 2.0f; // 初期スピード
         public static readonly float MaxSpeed = 24.0f;  // 最大スピード
         public static readonly float AddSpeed = 2.0f;   // 1回で上がるスピード
+        public static readonly float MaxAngle = 360.0f; // 360度
+        public static readonly float HalfAngle = MaxAngle / 2; // 180度
+        public static readonly float QuarterAngle = MaxAngle / 4; // 90度
 
         public GameObject ball;
         public Rigidbody2D rbody;
@@ -25,9 +28,12 @@ namespace Pong
         [SerializeField] private GameTask gameTask = null;
         private Mhl.IRandIntGeneratable rand = new Mhl.RandIntSystem();
         private float speed;
+        private float moveAngle;
 
         public Ball()
         {
+            speed = 0.0f;
+            moveAngle = 0.0f;
 
         }
 
@@ -78,18 +84,30 @@ namespace Pong
             switch (rs)
             {
                 case Direction.LeftUp:
-                    return Mhl.Direction.GetVelocity2D(125, speed);
+                    return GetMoveVelocity(125, speed);
                 case Direction.LeftDown:
-                    return Mhl.Direction.GetVelocity2D(225, speed);
+                    return GetMoveVelocity(225, speed);
                 case Direction.RightUp:
-                    return Mhl.Direction.GetVelocity2D(45, speed);
+                    return GetMoveVelocity(45, speed);
                 case Direction.RightDown:
-                    return Mhl.Direction.GetVelocity2D(325, speed);
+                    return GetMoveVelocity(325, speed);
                 default:
                     // 方向がおかしい または case未定義
                     UnityEngine.Assertions.Assert.IsTrue(false);
-                    return new Vector2(0, 0);
+                    return GetMoveVelocity(0, 0);
             }
+        }
+
+        /// <summary>
+        /// 移動のベクトルを取得する
+        /// </summary>
+        /// <param name="angle">角度</param>
+        /// <param name="speed">スピード</param>
+        /// <returns>移動ベクトル</returns>
+        private Vector2 GetMoveVelocity(float angle, float speed)
+        {
+            moveAngle = angle;
+            return Mhl.Direction.GetVelocity2D(angle, speed);
         }
 
         /// <summary>
@@ -157,16 +175,7 @@ namespace Pong
         /// </summary>
         private void BoundBoard()
         {
-            Vector2 v = rbody.velocity;
-            if (v.x > 0)
-            {
-                v.x = -speed;
-            }
-            else
-            {
-                v.x = speed;
-            }
-            rbody.velocity = v;
+            rbody.velocity = GetMoveVelocity(HalfAngle - moveAngle, speed);
         }
 
         /// <summary>
@@ -174,9 +183,7 @@ namespace Pong
         /// </summary>
         private void BoundWall()
         {
-            Vector2 v = rbody.velocity;
-            v.y *= -1;
-            rbody.velocity = v;
+            rbody.velocity = GetMoveVelocity(MaxAngle - moveAngle, speed);
         }
     }
 }

@@ -63,7 +63,7 @@ namespace Pong
         {
             scene = Scene.Initialize;
             playerTypes[(int)Pong.PlayerConstant.Position.Left] = Pong.PlayerConstant.Type.Man;
-            playerTypes[(int)Pong.PlayerConstant.Position.Right] = Pong.PlayerConstant.Type.Cpu1;
+            playerTypes[(int)Pong.PlayerConstant.Position.Right] = Pong.PlayerConstant.Type.Cpu2;
         }
 
         // Start is called before the first frame update

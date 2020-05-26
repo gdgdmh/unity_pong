@@ -21,6 +21,12 @@ namespace Pong
         public static readonly float MaxAngle = 360.0f; // 360度
         public static readonly float HalfAngle = MaxAngle / 2; // 180度
         public static readonly float QuarterAngle = MaxAngle / 4; // 90度
+        public static readonly float AdjustTopMinAngle = 85.0f; // 角度調整する上最小角度
+        public static readonly float AdjustTopMaxAngle = 95.0f; // 角度調整する上最大角度
+
+        public static readonly float AdjustBottomMinAngle = 265.0f; // 角度調整する下最小角度
+        public static readonly float AdjustBottomMaxAngle = 275.0f; // 角度調整する下最大角度
+
         public static readonly int RandomAngleMin = -15; // 玉のランダム角度(最小)
         public static readonly int RandomAngleMax = 15;  // 玉のランダム角度(最大)
 
@@ -137,16 +143,13 @@ namespace Pong
         /// <param name="collision">当たったオブジェクト</param>
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            Debug.Log("Ball");
             if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.Board))
             {
-                Debug.Log("Ball(Board)");
                 SpeedUp();
                 BoundBoard();
             }
             else if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.Wall))
             {
-                Debug.Log("Ball(Wall)");
                 BoundWall();
             }
             else if (collision.tag == Pong.Tag.ToString(Pong.Tag.Unity.GoalL))
@@ -178,8 +181,8 @@ namespace Pong
         /// </summary>
         private void BoundBoard()
         {
-            // 反射させて、少しランダムな角度を設定
             float angle = GetRandomAngle(HalfAngle - moveAngle);
+            angle = NormalizetionAngle(angle);
             rbody.velocity = GetMoveVelocity(angle, speed);
         }
 
@@ -189,7 +192,8 @@ namespace Pong
         private void BoundWall()
         {
             // 反射させる
-            rbody.velocity = GetMoveVelocity(MaxAngle - moveAngle, speed);
+            rbody.velocity = GetMoveVelocity(
+                NormalizetionAngle(MaxAngle - moveAngle), speed);
         }
 
         /// <summary>
@@ -212,8 +216,53 @@ namespace Pong
         private float CalcRandomAngle(float angle, int rangeMin, int rangeMax)
         {
             int randomAngle = rand.GetRange(rangeMin, rangeMax);
-            Debug.Log(string.Format("angle = {0} random = {1}", angle, angle + randomAngle));
-            return angle + randomAngle;
+            // 角度調整
+            angle = NormalizetionAngle(angle);
+            float fixedAngle = AdjustAngle(angle, NormalizetionAngle(angle + randomAngle));
+            Debug.Log(string.Format("angle = {0} finalAngle = {1}", angle, fixedAngle));
+            return fixedAngle;
+        }
+
+        /// <summary>
+        /// 角度の正規化
+        /// </summary>
+        /// <param name="angle">対象の角度</param>
+        /// <returns>正規化(0〜360度)された角度</returns>
+        private float NormalizetionAngle(float angle)
+        {
+            angle = angle % 360.0f;
+            if (angle < 0.0f)
+            {
+                angle += 360.0f;
+            }
+            return angle;
+        }
+
+        /// <summary>
+        /// 角度調整(あまり鋭角になると進行不能になる可能性があるので)
+        /// </summary>
+        /// <param name="beforeRandomAngle">ランダム前の角度</param>
+        /// <param name="afterRandomAngle">ランダム後の角度</param>
+        /// <returns>調整後の角度</returns>
+        private float AdjustAngle(float beforeRandomAngle, float afterRandomAngle)
+        {
+            // 上
+            if ((afterRandomAngle >= AdjustTopMinAngle)
+                || (afterRandomAngle <= AdjustTopMaxAngle))
+            {
+                Debug.Log(string.Format("Adjust Angle Top {0}", afterRandomAngle));
+                // 直角に近い角度ならロールバックする
+                return beforeRandomAngle;
+            }
+            // 下
+            if ((afterRandomAngle >= AdjustBottomMinAngle)
+                || (afterRandomAngle <= AdjustBottomMaxAngle))
+            {
+                Debug.Log(string.Format("Adjust Angle Bottom {0}", afterRandomAngle));
+                // // 直角に近い角度ならロールバックする
+                return beforeRandomAngle;
+            }
+            return afterRandomAngle;
         }
     }
 }

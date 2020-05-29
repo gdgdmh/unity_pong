@@ -12,7 +12,8 @@ namespace Pong
 
         public MainmenuTask()
         {
-            type = Pong.MainmenuConstant.Type.PlayerModeSelect;
+            type = Pong.MainmenuConstant.Type.None;
+            //type = Pong.MainmenuConstant.Type.PlayerModeSelect;
             //scene = 0;
         }
 

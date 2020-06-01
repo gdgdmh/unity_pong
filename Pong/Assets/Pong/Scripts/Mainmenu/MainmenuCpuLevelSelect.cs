@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Mhl;
 using UnityEngine;
 
 namespace Pong
 {
-    public class MainmenuCpuLevelSelect : MonoBehaviour, IMainmenuSelectable
+    public class MainmenuCpuLevelSelect : MonoBehaviour, IMainmenuSelectable, Mhl.IParameterGetable<Pong.BoardCpuLevel>
     {
         // Cpu選択のモード
         public enum Mode : int
@@ -31,11 +32,21 @@ namespace Pong
         private UnityEngine.UI.Text cpuSelectText = null;
         // 戻るか
         private bool isSelectedBack = false;
+        // Cpuレベル
+        private BoardCpuLevel level = new BoardCpuLevel(BoardCpuLevel.Level.Level1);
+        // Startメソッドが呼ばれたか
+        private bool IsStartCalled = false;
 
         // コンストラクタが使用できないのでプロパティを使用
+        // Startが呼ばれた後は変更しないこと
         public MainmenuCpuLevelSelect.Mode SelectMode
         {
-            set { mode = value; }
+            set
+            {
+                // Startが呼ばれた後にModeを変更するのは許可しない
+                UnityEngine.Assertions.Assert.IsFalse(IsStartCalled);
+                mode = value;
+            }
         }
 
         /// <summary>
@@ -53,6 +64,7 @@ namespace Pong
             UnityEngine.Assertions.Assert.IsNotNull(cpuSelectText);
             // テキスト設定
             SetModeToText(mode);
+            IsStartCalled = true;
         }
 
         /// <summary>
@@ -90,19 +102,24 @@ namespace Pong
         {
             if (number == Back)
             {
+                // 戻るボタン
                 Debug.Log("back");
                 isSelectedBack = true;
                 return;
             }
             if (number == CpuLevel1)
             {
+                // Level1ボタン
                 Debug.Log("CpuLevel1");
+                level = new BoardCpuLevel(BoardCpuLevel.Level.Level1);
                 type = MainmenuConstant.Type.ConfirmPlay;
                 return;
             }
             if (number == CpuLevel2)
             {
+                // Level2ボタン
                 Debug.Log("CpuLevel2");
+                level = new BoardCpuLevel(BoardCpuLevel.Level.Level2);
                 type = MainmenuConstant.Type.ConfirmPlay;
                 return;
             }
@@ -133,6 +150,15 @@ namespace Pong
                 cpuSelectText.text = CvC2Text;
                 return;
             }
+        }
+
+        /// <summary>
+        /// パラメータの取得
+        /// </summary>
+        /// <returns>Cpuレベルパラメータ</returns>
+        BoardCpuLevel IParameterGetable<BoardCpuLevel>.Get()
+        {
+            return level;
         }
     }
 }

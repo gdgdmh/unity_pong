@@ -8,6 +8,7 @@ namespace Pong
     {
         //private int scene;
         private Pong.IMainmenuSelectable mainmenu;
+        private GameObject mainmenuGameObject = null;
         private Pong.MainmenuConstant.Type type;
 
         public MainmenuTask()
@@ -20,32 +21,9 @@ namespace Pong
         // Start is called before the first frame update
         void Start()
         {
-            if (type == Pong.MainmenuConstant.Type.PlayerModeSelect)
-            {
-                SetPlayerSelectPrefab();
-                return;
-            }
-            if (type == Pong.MainmenuConstant.Type.PvcCpuLevelSelect)
-            {
-                SetPvcCpuSelectPrefab();
-                return;
-            }
-            if (type == Pong.MainmenuConstant.Type.CvcCpuLevelSelect1)
-            {
-                SetCvcCpuSelect1Prefab();
-                return;
-            }
-            if (type == Pong.MainmenuConstant.Type.CvcCpuLevelSelect2)
-            {
-                SetCvcCpuSelect2Prefab();
-                return;
-            }
-            if (type == Pong.MainmenuConstant.Type.ConfirmPlay)
-            {
-                SetConfirmPlayPrefab();
-                return;
-            }
+            SetPrefab(type);
         }
+
 
         // Update is called once per frame
         void Update()
@@ -91,6 +69,8 @@ namespace Pong
 
             mainmenu = (Pong.IMainmenuSelectable)g.GetComponent<Pong.MainmenuPlayerModeSelect>();
             UnityEngine.Assertions.Assert.IsNotNull(mainmenu);
+
+            mainmenuGameObject = g;
         }
 
         private void UpdatePlayerSelectPrefab()
@@ -126,10 +106,22 @@ namespace Pong
 
             mainmenu = (Pong.IMainmenuSelectable)select;
             UnityEngine.Assertions.Assert.IsNotNull(mainmenu);
+
+            mainmenuGameObject = g;
         }
 
         private void UpdatePvcCpuSelectPrefab()
         {
+            if (mainmenu.IsSelectedBack() == true)
+            {
+                Debug.Log("back");
+                SwitchPrefab(Pong.MainmenuConstant.Type.PlayerModeSelect);
+                //Destroy(mainmenuGameObject.gameObject);
+                //type = Pong.MainmenuConstant.Type.PlayerModeSelect;
+                //SetPrefab(type);
+                return;
+            }
+
             if (mainmenu.GetTransitionType() == MainmenuConstant.Type.None)
             {
                 // 何もしない
@@ -166,5 +158,63 @@ namespace Pong
         private void UpdateConfirmPlayPrefab()
         {
         }
+
+        /// <summary>
+        /// メニューのPrefabを設定する
+        /// </summary>
+        /// <param name="type"></param>
+        private void SetPrefab(Pong.MainmenuConstant.Type type)
+        {
+            if (type == Pong.MainmenuConstant.Type.PlayerModeSelect)
+            {
+                SetPlayerSelectPrefab();
+                return;
+            }
+            if (type == Pong.MainmenuConstant.Type.PvcCpuLevelSelect)
+            {
+                SetPvcCpuSelectPrefab();
+                return;
+            }
+            if (type == Pong.MainmenuConstant.Type.CvcCpuLevelSelect1)
+            {
+                SetCvcCpuSelect1Prefab();
+                return;
+            }
+            if (type == Pong.MainmenuConstant.Type.CvcCpuLevelSelect2)
+            {
+                SetCvcCpuSelect2Prefab();
+                return;
+            }
+            if (type == Pong.MainmenuConstant.Type.ConfirmPlay)
+            {
+                SetConfirmPlayPrefab();
+                return;
+            }
+        }
+
+        private void UnsetPrefab()
+        {
+            if (mainmenuGameObject.gameObject != null)
+            {
+                Destroy(mainmenuGameObject.gameObject);
+            }
+        }
+
+        private void SwitchPrefab(Pong.MainmenuConstant.Type nextType)
+        {
+            // 現在使用中のPrefabを開放
+            UnsetPrefab();
+            // 指定されたPrefabを設定
+            type = nextType;
+            SetPrefab(type);
+        }
+
+        /*
+                Destroy(mainmenuGameObject.gameObject);
+                type = Pong.MainmenuConstant.Type.PlayerModeSelect;
+                SetPrefab(type);
+
+         */
+
     }
 }

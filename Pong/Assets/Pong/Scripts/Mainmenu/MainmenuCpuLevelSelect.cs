@@ -32,15 +32,10 @@ namespace Pong
         // 戻るか
         private bool isSelectedBack = false;
 
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="mode">CPU選択のモード指定</param>
-        public MainmenuCpuLevelSelect(MainmenuCpuLevelSelect.Mode mode)
+        // コンストラクタが使用できないのでプロパティを使用
+        public MainmenuCpuLevelSelect.Mode SelectMode
         {
-            this.mode = mode;
-            type = MainmenuConstant.Type.None;
-            isSelectedBack = false;
+            set { mode = value; }
         }
 
         /// <summary>
@@ -48,6 +43,9 @@ namespace Pong
         /// </summary>
         public void Start()
         {
+            type = MainmenuConstant.Type.None;
+            isSelectedBack = false;
+
             // CPU選択テキストの取得
             GameObject g = GameObject.Find("CpuLevelText");
             UnityEngine.Assertions.Assert.IsNotNull(g);
@@ -92,16 +90,19 @@ namespace Pong
         {
             if (number == Back)
             {
+                Debug.Log("back");
                 isSelectedBack = true;
                 return;
             }
             if (number == CpuLevel1)
             {
+                Debug.Log("CpuLevel1");
                 type = MainmenuConstant.Type.ConfirmPlay;
                 return;
             }
             if (number == CpuLevel2)
             {
+                Debug.Log("CpuLevel2");
                 type = MainmenuConstant.Type.ConfirmPlay;
                 return;
             }
@@ -116,16 +117,19 @@ namespace Pong
             UnityEngine.Assertions.Assert.IsNotNull(cpuSelectText);
             if (mode == MainmenuCpuLevelSelect.Mode.PvC)
             {
+                Debug.Log("PvC");
                 cpuSelectText.text = PvCText;
                 return;
             }
             if (mode == MainmenuCpuLevelSelect.Mode.CvC1)
             {
+                Debug.Log("CvC1");
                 cpuSelectText.text = CvC1Text;
                 return;
             }
             if (mode == MainmenuCpuLevelSelect.Mode.CvC2)
             {
+                Debug.Log("CvC2");
                 cpuSelectText.text = CvC2Text;
                 return;
             }

@@ -10,6 +10,9 @@ namespace Pong
         private Pong.IMainmenuSelectable mainmenu;
         private GameObject mainmenuGameObject = null;
         private Pong.MainmenuConstant.Type type;
+        private Pong.BoardCpuLevel cpu = new Pong.BoardCpuLevel(BoardCpuLevel.Level.Level1);
+        private Pong.BoardCpuLevel cpu1 = new Pong.BoardCpuLevel(BoardCpuLevel.Level.Level1);
+        private Pong.BoardCpuLevel cpu2 = new Pong.BoardCpuLevel(BoardCpuLevel.Level.Level1);
 
         public MainmenuTask()
         {
@@ -121,6 +124,8 @@ namespace Pong
             if (mainmenu.GetTransitionType() == MainmenuConstant.Type.ConfirmPlay)
             {
                 Debug.Log("Confirm");
+                cpu = GetMainmenuCpuLevel();
+                Debug.Log(cpu.Get());
                 SwitchPrefab(mainmenu.GetTransitionType());
                 return;
             }
@@ -155,6 +160,8 @@ namespace Pong
             if (mainmenu.GetTransitionType() == Pong.MainmenuConstant.Type.CvcCpuLevelSelect2)
             {
                 Debug.Log("select2");
+                cpu1 = GetMainmenuCpuLevel();
+                Debug.Log(cpu1.Get());
                 SwitchPrefab(mainmenu.GetTransitionType());
                 return;
             }
@@ -190,6 +197,8 @@ namespace Pong
             if (mainmenu.GetTransitionType() == Pong.MainmenuConstant.Type.ConfirmPlay)
             {
                 Debug.Log("confirm");
+                cpu2 = GetMainmenuCpuLevel();
+                Debug.Log(cpu2.Get());
                 SwitchPrefab(mainmenu.GetTransitionType());
                 return;
             }
@@ -260,6 +269,19 @@ namespace Pong
             // 指定されたPrefabを設定
             type = nextType;
             SetPrefab(type);
+        }
+
+        /// <summary>
+        /// メインメニューで選択されたCpuレベルの取得
+        /// </summary>
+        /// <returns>Cpuレベルパラメータクラス</returns>
+        private Pong.BoardCpuLevel GetMainmenuCpuLevel()
+        {
+            // CPuレベルを取得
+            UnityEngine.Assertions.Assert.IsNotNull(mainmenu);
+            Pong.MainmenuCpuLevelSelect select = mainmenu as Pong.MainmenuCpuLevelSelect;
+            UnityEngine.Assertions.Assert.IsNotNull(select);
+            return select.Get();
         }
     }
 }

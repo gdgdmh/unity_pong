@@ -29,7 +29,7 @@ namespace Pong
         /// <returns>Cpuレベル</returns>
         public BoardCpuLevel.Level Get()
         {
-            return Level.Level1;
+            return level;
         }
     }
 }

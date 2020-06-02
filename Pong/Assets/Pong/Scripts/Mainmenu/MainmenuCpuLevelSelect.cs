@@ -175,7 +175,7 @@ namespace Pong
         /// パラメータの取得
         /// </summary>
         /// <returns>Cpuレベルパラメータ</returns>
-        BoardCpuLevel IParameterGetable<BoardCpuLevel>.Get()
+        public BoardCpuLevel Get()
         {
             return level;
         }

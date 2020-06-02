@@ -75,20 +75,19 @@ namespace Pong
 
         private void UpdatePlayerSelectPrefab()
         {
-            if (mainmenu.GetTransitionType() == MainmenuConstant.Type.None)
-            {
-                // 何もしない
-                return;
-            }
-
             if (mainmenu.GetTransitionType() == MainmenuConstant.Type.PvcCpuLevelSelect)
             {
+                // プレイヤー VS Cpu
+                // Cpuレベル選択
                 Debug.Log("PvC");
+                SwitchPrefab(MainmenuConstant.Type.PvcCpuLevelSelect);
                 return;
             }
             if (mainmenu.GetTransitionType() == MainmenuConstant.Type.CvcCpuLevelSelect1)
             {
+                // CPU同士の対戦はまだ未実装
                 Debug.Log("CvC");
+                SwitchPrefab(mainmenu.GetTransitionType());
                 return;
             }
         }
@@ -116,39 +115,85 @@ namespace Pong
             {
                 Debug.Log("back");
                 SwitchPrefab(Pong.MainmenuConstant.Type.PlayerModeSelect);
-                //Destroy(mainmenuGameObject.gameObject);
-                //type = Pong.MainmenuConstant.Type.PlayerModeSelect;
-                //SetPrefab(type);
-                return;
-            }
-
-            if (mainmenu.GetTransitionType() == MainmenuConstant.Type.None)
-            {
-                // 何もしない
                 return;
             }
 
             if (mainmenu.GetTransitionType() == MainmenuConstant.Type.ConfirmPlay)
             {
                 Debug.Log("Confirm");
+                SwitchPrefab(mainmenu.GetTransitionType());
                 return;
             }
         }
 
         private void SetCvcCpuSelect1Prefab()
         {
+            GameObject prefab = (GameObject)Resources.Load("Prefabs/Mainmenu/mainmenu_select_cpu_level");
+            UnityEngine.Assertions.Assert.IsNotNull(prefab);
+            GameObject g = Instantiate(prefab);
+            UnityEngine.Assertions.Assert.IsNotNull(g);
+
+            Pong.MainmenuCpuLevelSelect select = g.GetComponent<Pong.MainmenuCpuLevelSelect>();
+            UnityEngine.Assertions.Assert.IsNotNull(select);
+            select.SelectMode = Pong.MainmenuCpuLevelSelect.Mode.CvC1;
+
+            mainmenu = (Pong.IMainmenuSelectable)select;
+            UnityEngine.Assertions.Assert.IsNotNull(mainmenu);
+
+            mainmenuGameObject = g;
         }
 
         private void UpdateCvcCpuSelect1Prefab()
         {
+            if (mainmenu.IsSelectedBack() == true)
+            {
+                Debug.Log("back");
+                SwitchPrefab(Pong.MainmenuConstant.Type.PlayerModeSelect);
+                return;
+            }
+
+            if (mainmenu.GetTransitionType() == Pong.MainmenuConstant.Type.CvcCpuLevelSelect2)
+            {
+                Debug.Log("select2");
+                SwitchPrefab(mainmenu.GetTransitionType());
+                return;
+            }
         }
 
         private void SetCvcCpuSelect2Prefab()
         {
+            GameObject prefab = (GameObject)Resources.Load("Prefabs/Mainmenu/mainmenu_select_cpu_level");
+            UnityEngine.Assertions.Assert.IsNotNull(prefab);
+            GameObject g = Instantiate(prefab);
+            UnityEngine.Assertions.Assert.IsNotNull(g);
+
+            Pong.MainmenuCpuLevelSelect select = g.GetComponent<Pong.MainmenuCpuLevelSelect>();
+            UnityEngine.Assertions.Assert.IsNotNull(select);
+            select.SelectMode = Pong.MainmenuCpuLevelSelect.Mode.CvC2;
+
+            mainmenu = (Pong.IMainmenuSelectable)select;
+            UnityEngine.Assertions.Assert.IsNotNull(mainmenu);
+
+            mainmenuGameObject = g;
+
         }
 
         private void UpdateCvcCpuSelect2Prefab()
         {
+            if (mainmenu.IsSelectedBack() == true)
+            {
+                Debug.Log("back");
+                SwitchPrefab(Pong.MainmenuConstant.Type.CvcCpuLevelSelect1);
+                return;
+            }
+
+            if (mainmenu.GetTransitionType() == Pong.MainmenuConstant.Type.ConfirmPlay)
+            {
+                Debug.Log("confirm");
+                SwitchPrefab(mainmenu.GetTransitionType());
+                return;
+            }
+
         }
 
         private void SetConfirmPlayPrefab()
@@ -192,14 +237,22 @@ namespace Pong
             }
         }
 
+        /// <summary>
+        /// Prefabの開放
+        /// </summary>
         private void UnsetPrefab()
         {
             if (mainmenuGameObject.gameObject != null)
             {
                 Destroy(mainmenuGameObject.gameObject);
             }
+            mainmenuGameObject = null;
         }
 
+        /// <summary>
+        /// Prefabの切り替え
+        /// </summary>
+        /// <param name="nextType">次のPrefabのタイプ</param>
         private void SwitchPrefab(Pong.MainmenuConstant.Type nextType)
         {
             // 現在使用中のPrefabを開放
@@ -208,13 +261,5 @@ namespace Pong
             type = nextType;
             SetPrefab(type);
         }
-
-        /*
-                Destroy(mainmenuGameObject.gameObject);
-                type = Pong.MainmenuConstant.Type.PlayerModeSelect;
-                SetPrefab(type);
-
-         */
-
     }
 }

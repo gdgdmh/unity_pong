@@ -58,7 +58,7 @@ namespace Pong
             isSelectedBack = false;
 
             // CPU選択テキストの取得
-            GameObject g = GameObject.Find("CpuLevelText");
+            GameObject g = transform.Find("Canvas/CpuLevelText").gameObject;
             UnityEngine.Assertions.Assert.IsNotNull(g);
             cpuSelectText = g.GetComponent<UnityEngine.UI.Text>();
             UnityEngine.Assertions.Assert.IsNotNull(cpuSelectText);
@@ -112,7 +112,7 @@ namespace Pong
                 // Level1ボタン
                 Debug.Log("CpuLevel1");
                 level = new BoardCpuLevel(BoardCpuLevel.Level.Level1);
-                type = MainmenuConstant.Type.ConfirmPlay;
+                type = GetClickCpuLevel1Type(mode);
                 return;
             }
             if (number == CpuLevel2)
@@ -120,33 +120,52 @@ namespace Pong
                 // Level2ボタン
                 Debug.Log("CpuLevel2");
                 level = new BoardCpuLevel(BoardCpuLevel.Level.Level2);
-                type = MainmenuConstant.Type.ConfirmPlay;
+                type = GetClickCpuLevel2Type(mode);
                 return;
             }
         }
+
+        private MainmenuConstant.Type GetClickCpuLevel1Type(MainmenuCpuLevelSelect.Mode mode)
+        {
+            if (mode == Mode.CvC1)
+            {
+                return MainmenuConstant.Type.CvcCpuLevelSelect2;
+            }
+            return MainmenuConstant.Type.ConfirmPlay;
+        }
+
+        private MainmenuConstant.Type GetClickCpuLevel2Type(MainmenuCpuLevelSelect.Mode mode)
+        {
+            if (mode == Mode.CvC1)
+            {
+                return MainmenuConstant.Type.CvcCpuLevelSelect2;
+            }
+            return MainmenuConstant.Type.ConfirmPlay;
+        }
+
 
         /// <summary>
         /// モードからテキストを設定する
         /// </summary>
         /// <param name="mode">対象モード</param>
-        private void SetModeToText(MainmenuCpuLevelSelect.Mode mode)
+        private void SetModeToText(MainmenuCpuLevelSelect.Mode setMode)
         {
             UnityEngine.Assertions.Assert.IsNotNull(cpuSelectText);
             if (mode == MainmenuCpuLevelSelect.Mode.PvC)
             {
-                Debug.Log("PvC");
+                Debug.Log("PvC text");
                 cpuSelectText.text = PvCText;
                 return;
             }
             if (mode == MainmenuCpuLevelSelect.Mode.CvC1)
             {
-                Debug.Log("CvC1");
+                Debug.Log("CvC1 text");
                 cpuSelectText.text = CvC1Text;
                 return;
             }
             if (mode == MainmenuCpuLevelSelect.Mode.CvC2)
             {
-                Debug.Log("CvC2");
+                Debug.Log("CvC2 text");
                 cpuSelectText.text = CvC2Text;
                 return;
             }

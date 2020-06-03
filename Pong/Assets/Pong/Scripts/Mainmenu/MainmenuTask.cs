@@ -6,12 +6,21 @@ namespace Pong
 {
     public class MainmenuTask : MonoBehaviour
     {
+        private enum Mode : int {
+            PvC,    // PlayerVsCpu
+            CvC,   // CpuVsCpu
+        };
+
         private static readonly string GameScenePath = "Game";
+        private static readonly string GameSceneTaskObjectTag = "game_task";
+        private static readonly string PlayerSelectPrefabPath = "Prefabs/Mainmenu/mainmenu_player_select";
+        private static readonly string SelectCpuLevelPrefabPath = "Prefabs/Mainmenu/mainmenu_select_cpu_level";
 
         //private int scene;
         private Pong.IMainmenuSelectable mainmenu;
         private GameObject mainmenuGameObject = null;
         private Pong.MainmenuConstant.Type type;
+        private Pong.MainmenuTask.Mode mode;
         private Pong.BoardCpuLevel cpu = new Pong.BoardCpuLevel(BoardCpuLevel.Level.Level1);
         private Pong.BoardCpuLevel cpu1 = new Pong.BoardCpuLevel(BoardCpuLevel.Level.Level1);
         private Pong.BoardCpuLevel cpu2 = new Pong.BoardCpuLevel(BoardCpuLevel.Level.Level1);
@@ -21,6 +30,7 @@ namespace Pong
             //type = Pong.MainmenuConstant.Type.None;
             //type = Pong.MainmenuConstant.Type.PlayerModeSelect;
             type = Pong.MainmenuConstant.Type.PvcCpuLevelSelect;
+            mode = Pong.MainmenuTask.Mode.PvC;
         }
 
         // Start is called before the first frame update
@@ -67,7 +77,7 @@ namespace Pong
 
         private void SetPlayerSelectPrefab()
         {
-            GameObject prefab = (GameObject)Resources.Load("Prefabs/Mainmenu/mainmenu_player_select");
+            GameObject prefab = (GameObject)Resources.Load(PlayerSelectPrefabPath);
             UnityEngine.Assertions.Assert.IsNotNull(prefab);
             GameObject g = Instantiate(prefab);
             UnityEngine.Assertions.Assert.IsNotNull(g);
@@ -86,6 +96,7 @@ namespace Pong
                 // Cpuレベル選択
                 Debug.Log("PvC");
                 SwitchPrefab(MainmenuConstant.Type.PvcCpuLevelSelect);
+                mode = Pong.MainmenuTask.Mode.PvC;
                 return;
             }
             if (mainmenu.GetTransitionType() == MainmenuConstant.Type.CvcCpuLevelSelect1)
@@ -93,13 +104,14 @@ namespace Pong
                 // CPU同士の対戦はまだ未実装
                 Debug.Log("CvC");
                 SwitchPrefab(mainmenu.GetTransitionType());
+                mode = Pong.MainmenuTask.Mode.CvC;
                 return;
             }
         }
 
         private void SetPvcCpuSelectPrefab()
         {
-            GameObject prefab = (GameObject)Resources.Load("Prefabs/Mainmenu/mainmenu_select_cpu_level");
+            GameObject prefab = (GameObject)Resources.Load(SelectCpuLevelPrefabPath);
             UnityEngine.Assertions.Assert.IsNotNull(prefab);
             GameObject g = Instantiate(prefab);
             UnityEngine.Assertions.Assert.IsNotNull(g);
@@ -129,13 +141,15 @@ namespace Pong
                 cpu = GetMainmenuCpuLevel();
                 Debug.Log(cpu.Get());
                 SwitchPrefab(mainmenu.GetTransitionType());
+                // シーン切り替え
+                ChangeSceneGame();
                 return;
             }
         }
 
         private void SetCvcCpuSelect1Prefab()
         {
-            GameObject prefab = (GameObject)Resources.Load("Prefabs/Mainmenu/mainmenu_select_cpu_level");
+            GameObject prefab = (GameObject)Resources.Load(SelectCpuLevelPrefabPath);
             UnityEngine.Assertions.Assert.IsNotNull(prefab);
             GameObject g = Instantiate(prefab);
             UnityEngine.Assertions.Assert.IsNotNull(g);
@@ -171,7 +185,7 @@ namespace Pong
 
         private void SetCvcCpuSelect2Prefab()
         {
-            GameObject prefab = (GameObject)Resources.Load("Prefabs/Mainmenu/mainmenu_select_cpu_level");
+            GameObject prefab = (GameObject)Resources.Load(SelectCpuLevelPrefabPath);
             UnityEngine.Assertions.Assert.IsNotNull(prefab);
             GameObject g = Instantiate(prefab);
             UnityEngine.Assertions.Assert.IsNotNull(g);
@@ -303,11 +317,49 @@ namespace Pong
         private void EventGameSceneLoaded(UnityEngine.SceneManagement.Scene next,
             UnityEngine.SceneManagement.LoadSceneMode mode)
         {
-            //var script = GameObject.FindWithTag("GameManager").GetComponent<>();
+            var script = GameObject.FindWithTag(GameSceneTaskObjectTag).GetComponent<GameTask>();
+            SetPlayerType(script);
 
             // イベント削除
             UnityEngine.SceneManagement.SceneManager.sceneLoaded
                 -= EventGameSceneLoaded;
+        }
+
+        /// <summary>
+        /// プレイヤータイプを設定
+        /// </summary>
+        /// <param name="gameTask">ゲームスクリプト</param>
+        private void SetPlayerType(GameTask gameTask)
+        {
+            if (mode == Mode.PvC) {
+                gameTask.SetPlayerType(PlayerConstant.Position.Left, PlayerConstant.Type.Man);
+                gameTask.SetPlayerType(PlayerConstant.Position.Right, ConvertType(cpu.Get()));
+                return;
+            }
+            if (mode == Mode.CvC) {
+                gameTask.SetPlayerType(PlayerConstant.Position.Left, ConvertType(cpu1.Get()));
+                gameTask.SetPlayerType(PlayerConstant.Position.Right, ConvertType(cpu2.Get()));
+                return;
+            }
+        }
+
+        /// <summary>
+        /// PlayerConstant.Typeに変換する
+        /// </summary>
+        /// <param name="level">BoardCpuLevel.Level定数</param>
+        /// <returns>BoardCpuLevel.LevelからPlayerConstant.Typeに変換されたレベル</returns>
+        private Pong.PlayerConstant.Type ConvertType(BoardCpuLevel.Level level)
+        {
+            if (level == BoardCpuLevel.Level.Level1) {
+                return Pong.PlayerConstant.Type.Cpu1;
+            }
+            if (level == BoardCpuLevel.Level.Level2)
+            {
+                return Pong.PlayerConstant.Type.Cpu2;
+            }
+            // 本来はここにこない
+            UnityEngine.Assertions.Assert.IsFalse(true);
+            return Pong.PlayerConstant.Type.Cpu1;
         }
     }
 }

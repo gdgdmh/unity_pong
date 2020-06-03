@@ -9,6 +9,7 @@ TagManager:
   - wall
   - goal_l
   - goal_r
+  - game_task
   layers:
   - Default
   - TransparentFX

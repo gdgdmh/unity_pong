@@ -6,6 +6,8 @@ namespace Pong
 {
     public class MainmenuTask : MonoBehaviour
     {
+        private static readonly string GameScenePath = "Game";
+
         //private int scene;
         private Pong.IMainmenuSelectable mainmenu;
         private GameObject mainmenuGameObject = null;
@@ -282,6 +284,30 @@ namespace Pong
             Pong.MainmenuCpuLevelSelect select = mainmenu as Pong.MainmenuCpuLevelSelect;
             UnityEngine.Assertions.Assert.IsNotNull(select);
             return select.Get();
+        }
+
+        private void ChangeSceneGame()
+        {
+            // イベント登録してシーン切り替え
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded
+                += EventGameSceneLoaded;
+            UnityEngine.SceneManagement.SceneManager.LoadScene(GameScenePath);
+
+        }
+
+        /// <summary>
+        /// シーン読み込み後イベント
+        /// </summary>
+        /// <param name="next">次のシーン</param>
+        /// <param name="mode"></param>
+        private void EventGameSceneLoaded(UnityEngine.SceneManagement.Scene next,
+            UnityEngine.SceneManagement.LoadSceneMode mode)
+        {
+            //var script = GameObject.FindWithTag("GameManager").GetComponent<>();
+
+            // イベント削除
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded
+                -= EventGameSceneLoaded;
         }
     }
 }

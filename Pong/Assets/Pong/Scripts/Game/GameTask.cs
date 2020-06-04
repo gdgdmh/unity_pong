@@ -66,8 +66,18 @@ namespace Pong
             playerTypes[(int)Pong.PlayerConstant.Position.Right] = Pong.PlayerConstant.Type.Cpu1;
         }
 
+        /// <summary>
+        /// プレイヤーのタイプをセット
+        /// </summary>
+        /// <param name="position">対象プレイヤーの位置</param>
+        /// <param name="type">タイプ</param>
+        public void SetPlayerType(Pong.PlayerConstant.Position position, Pong.PlayerConstant.Type type)
+        {
+            playerTypes[(int)position] = type;
+        }
+
         // Start is called before the first frame update
-        void Start()
+        private void Start()
         {
             scene = Scene.Initialize;
 
@@ -98,7 +108,7 @@ namespace Pong
         }
 
         // Update is called once per frame
-        void Update()
+        private void Update()
         {
             switch (scene)
             {

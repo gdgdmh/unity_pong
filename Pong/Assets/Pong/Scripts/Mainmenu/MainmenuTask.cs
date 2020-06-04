@@ -15,6 +15,7 @@ namespace Pong
         private static readonly string GameSceneTaskObjectTag = "game_task";
         private static readonly string PlayerSelectPrefabPath = "Prefabs/Mainmenu/mainmenu_player_select";
         private static readonly string SelectCpuLevelPrefabPath = "Prefabs/Mainmenu/mainmenu_select_cpu_level";
+        private static readonly string ConfirmPrefabPath = "Prefabs/Mainmenu/mainmenu_confirm";
 
         //private int scene;
         private Pong.IMainmenuSelectable mainmenu;
@@ -28,8 +29,7 @@ namespace Pong
         public MainmenuTask()
         {
             //type = Pong.MainmenuConstant.Type.None;
-            //type = Pong.MainmenuConstant.Type.PlayerModeSelect;
-            type = Pong.MainmenuConstant.Type.PvcCpuLevelSelect;
+            type = Pong.MainmenuConstant.Type.PlayerModeSelect;
             mode = Pong.MainmenuTask.Mode.PvC;
         }
 
@@ -141,8 +141,6 @@ namespace Pong
                 cpu = GetMainmenuCpuLevel();
                 Debug.Log(cpu.Get());
                 SwitchPrefab(mainmenu.GetTransitionType());
-                // シーン切り替え
-                ChangeSceneGame();
                 return;
             }
         }
@@ -223,10 +221,54 @@ namespace Pong
 
         private void SetConfirmPlayPrefab()
         {
+            GameObject prefab = (GameObject)Resources.Load(ConfirmPrefabPath);
+            UnityEngine.Assertions.Assert.IsNotNull(prefab);
+            GameObject g = Instantiate(prefab);
+            UnityEngine.Assertions.Assert.IsNotNull(g);
+
+            Pong.MainmenuConfirm select = g.GetComponent<Pong.MainmenuConfirm>();
+            UnityEngine.Assertions.Assert.IsNotNull(select);
+            if (mode == Mode.PvC)
+            {
+                select.Mode = MainmenuConfirm.ConfirmMode.PvC;
+                select.Cpu1 = cpu;
+            }
+            if (mode == Mode.CvC)
+            {
+                select.Mode = MainmenuConfirm.ConfirmMode.CvC;
+                select.Cpu1 = cpu1;
+                select.Cpu2 = cpu2;
+            }
+            mainmenu = (Pong.IMainmenuSelectable)select;
+            UnityEngine.Assertions.Assert.IsNotNull(mainmenu);
+
+            mainmenuGameObject = g;
         }
 
         private void UpdateConfirmPlayPrefab()
         {
+            if (mainmenu.IsSelectedBack() == true)
+            {
+                Debug.Log("back");
+                if (mode == Mode.PvC)
+                {
+                    SwitchPrefab(Pong.MainmenuConstant.Type.PvcCpuLevelSelect);
+                    return;
+                }
+                if (mode == Mode.CvC)
+                {
+                    SwitchPrefab(Pong.MainmenuConstant.Type.CvcCpuLevelSelect2);
+                    return;
+                }
+            }
+
+            if (mainmenu.GetTransitionType() == Pong.MainmenuConstant.Type.Start)
+            {
+                Debug.Log("start");
+                // シーン切り替え
+                ChangeSceneGame();
+                return;
+            }
         }
 
         /// <summary>
